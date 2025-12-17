@@ -3,14 +3,17 @@
 ## ✅ Implementirane funkcionalnosti
 
 ### 1. **API rute**
+
 - `POST /api/company-request/[id]/generate-documents` - Generiše PDF dokumente
 - `GET /api/company-request/[id]/download/[filename]` - Download PDF-a
 
 ### 2. **Automatsko generisanje**
+
 - Kada admin postavi status na `PAID`, automatski se pokreće generisanje dokumenata
 - Dokumenti se čuvaju u `/generated-docs` folderu
 
 ### 3. **UI komponente**
+
 - Dugme za ručno generisanje dokumenata (ako već ne postoje)
 - Download linkovi za svaki generisani dokument
 - Status indikatori i error handling
@@ -22,11 +25,13 @@
 ### 1. **Priprema**
 
 Pokreni dev server:
+
 ```bash
 npm run dev
 ```
 
 Proveri da li je baza seedovana (template mora postojati):
+
 ```bash
 npx prisma db seed
 ```
@@ -34,11 +39,13 @@ npx prisma db seed
 ### 2. **Kreiraj test zahtjev**
 
 Opcija A - Kroz UI:
+
 1. Registruj se na `/register`
 2. Popuni wizard na `/wizard`
 3. Submituj zahtjev
 
 Opcija B - Skripta:
+
 ```bash
 node scripts/create-test-company.js
 ```
@@ -46,10 +53,12 @@ node scripts/create-test-company.js
 ### 3. **Simuliraj plaćanje**
 
 Kao korisnik:
+
 1. Idi na `/payment/[id]`
 2. Klikni "Potvrdio sam plaćanje"
 
 Kao admin:
+
 1. Idi na `/admin`
 2. Pronađi zahtjev
 3. Postavi status na `PAID`
@@ -58,6 +67,7 @@ Kao admin:
 ### 4. **Download dokumenta**
 
 Kao korisnik:
+
 1. Idi na `/request/[id]`
 2. Klikni "Download" na dokumentu
 3. PDF se preuzima sa kompletnim statutom
@@ -75,6 +85,7 @@ curl -X POST http://localhost:3000/api/company-request/[REQUEST_ID]/generate-doc
 ```
 
 Ili koristi test skriptu:
+
 ```bash
 node scripts/test-document-generation.js [REQUEST_ID]
 ```
@@ -106,17 +117,21 @@ node scripts/test-document-generation.js [REQUEST_ID]
 ## 🎯 Flow rada sistema
 
 1. **Korisnik kreira zahtjev** (`/wizard`)
+
    - Popunjava podatke o firmi i osnivačima
    - Status: `DRAFT`
 
 2. **Korisnik potvrdi plaćanje** (`/payment/[id]`)
+
    - Status: `AWAITING_PAYMENT` → `PAYMENT_PENDING`
 
 3. **Admin odobri plaćanje** (`/admin`)
+
    - Status: `PAID`
    - **Automatski** se pokreće generisanje dokumenata
 
 4. **Sistem generiše PDF**
+
    - Učitava template iz baze
    - Popunjava podatke (Handlebars)
    - Puppeteer renderuje HTML → PDF
@@ -142,13 +157,17 @@ node scripts/test-document-generation.js [REQUEST_ID]
 ## 🐛 Troubleshooting
 
 ### Problem: "Template not found"
+
 **Rješenje**: Pokreni seed:
+
 ```bash
 npx prisma db seed
 ```
 
 ### Problem: "Puppeteer error"
+
 **Rješenje**: Instaliraj Chrome dependencies:
+
 ```bash
 # macOS
 brew install chromium
@@ -158,12 +177,15 @@ sudo apt-get install chromium-browser
 ```
 
 ### Problem: "File not found on server"
+
 **Rješenje**: Proveri da li postoji `/generated-docs` folder:
+
 ```bash
 mkdir -p generated-docs
 ```
 
 ### Problem: "Payment must be completed"
+
 **Rješenje**: Postavi status zahtjeva na `PAID` preko admin panela
 
 ---
@@ -173,6 +195,7 @@ mkdir -p generated-docs
 Template se nalazi u: `templates/doo-statut.hbs`
 
 Varijable dostupne u template-u:
+
 - `{{companyName}}` - Naziv firme
 - `{{address}}` - Adresa firme
 - `{{activity}}` - Djelatnost
@@ -184,6 +207,7 @@ Varijable dostupne u template-u:
   - `{{sharePercentage}}` - Procenat vlasništva
 
 Za izmjene:
+
 1. Izmeni `templates/doo-statut.hbs`
 2. Pokreni: `npx prisma db seed`
 3. Generiši novi dokument
@@ -193,6 +217,7 @@ Za izmjene:
 ## 📊 Monitoring i logovi
 
 Svi koraci generisanja se loguju u konzolu:
+
 - `Generating PDF for company: XYZ`
 - `PDF saved to: /path/to/file.pdf`
 - `Document generation triggered for request 123`

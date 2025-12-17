@@ -409,6 +409,17 @@ export default async function RequestDetailPage({ params }: Props) {
                 Brze akcije
               </h3>
               <div className="space-y-3">
+                {/* Preview dugme - dostupno uvijek */}
+                <a
+                  href={`/api/company-request/${companyRequest.id}/preview`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center px-4 py-2 border border-blue-300 bg-blue-50 text-blue-700 rounded-lg text-sm hover:bg-blue-100"
+                >
+                  <FileText className="w-4 h-4 mr-2" />
+                  Pregled statuta (Preview)
+                </a>
+
                 {companyRequest.documents.length === 0 &&
                   (companyRequest.status === "PAID" ||
                     companyRequest.status === "PROCESSING" ||
@@ -429,7 +440,11 @@ export default async function RequestDetailPage({ params }: Props) {
                       className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50"
                     >
                       <Download className="w-4 h-4 mr-2" />
-                      Download: {doc.fileName.replace(/^statut-.*?-\d+\.pdf$/, "Statut društva")}
+                      Download:{" "}
+                      {doc.fileName.replace(
+                        /^statut-.*?-\d+\.pdf$/,
+                        "Statut društva"
+                      )}
                     </a>
                   ))}
 

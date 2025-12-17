@@ -58,7 +58,10 @@ export async function GET(
     );
 
     if (!document) {
-      return NextResponse.json({ error: "Document not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Document not found" },
+        { status: 404 }
+      );
     }
 
     // Proveri da li fajl postoji na disku

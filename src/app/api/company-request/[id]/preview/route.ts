@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuthSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { pdfGenerator } from "@/lib/pdf-generator";
-import fs from "fs";
-import path from "path";
 
 interface RouteParams {
   params: Promise<{
@@ -11,7 +9,7 @@ interface RouteParams {
   }>;
 }
 
-export async function POST(
+export async function GET(
   request: NextRequest,
   { params }: RouteParams
 ): Promise<NextResponse> {
@@ -54,30 +52,6 @@ export async function POST(
       );
     }
 
-    // Proveri da li je plaćanje izvršeno
-    if (
-      companyRequest.status !== "PAID" &&
-      companyRequest.status !== "PROCESSING" &&
-      companyRequest.status !== "COMPLETED"
-    ) {
-      return NextResponse.json(
-        { error: "Payment must be completed before generating documents" },
-        { status: 403 }
-      );
-    }
-
-    // Proveri da li dokumenti već postoje
-    const existingDocs = await prisma.generatedDocument.findMany({
-      where: { companyRequestId: requestId },
-    });
-
-    if (existingDocs.length > 0) {
-      return NextResponse.json({
-        message: "Documents already exist",
-        documents: existingDocs,
-      });
-    }
-
     // Dohvati template iz baze
     const template = await prisma.template.findUnique({
       where: { slug: "doo-statut" },
@@ -111,66 +85,33 @@ export async function POST(
       })),
     };
 
-    // Generiši PDF
-    console.log("Generating PDF for company:", companyRequest.companyName);
-    const pdfBuffer = await pdfGenerator.generateFinal(
+    // Generiši PREVIEW PDF
+    console.log(
+      "Generating PREVIEW PDF for company:",
+      companyRequest.companyName
+    );
+    const pdfBuffer = await pdfGenerator.generatePreview(
       template.content,
       templateData
     );
 
-    // Kreiraj folder za dokumente ako ne postoji
-    const docsDir = path.join(process.cwd(), "generated-docs");
-    if (!fs.existsSync(docsDir)) {
-      fs.mkdirSync(docsDir, { recursive: true });
-    }
-
-    // Generiši jedinstveno ime fajla
-    const sanitizedName = companyRequest.companyName
-      .replace(/[^a-zA-Z0-9\s]/g, "")
-      .replace(/\s+/g, "-")
-      .toLowerCase();
-    const timestamp = Date.now();
-    const fileName = `statut-${sanitizedName}-${timestamp}.pdf`;
-    const filePath = path.join(docsDir, fileName);
-
-    // Sačuvaj PDF na disk
-    fs.writeFileSync(filePath, pdfBuffer);
-    console.log("PDF saved to:", filePath);
-
-    // Sačuvaj metadata u bazu
-    const generatedDocument = await prisma.generatedDocument.create({
-      data: {
-        companyRequestId: requestId,
-        templateId: template.id,
-        fileName,
-        fileUrl: `/api/company-request/${requestId}/download/${fileName}`,
-        mimeType: "application/pdf",
-        fileSize: pdfBuffer.length,
-        metadata: JSON.stringify({
-          generatedAt: new Date().toISOString(),
-          generatedBy: session.user.id,
-          templateSlug: "doo-statut",
-        }),
+    // Vrati PDF direktno (bez čuvanja na disk)
+    return new NextResponse(Buffer.from(pdfBuffer), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `inline; filename="preview-statut-${companyRequest.companyName.replace(
+          /[^a-zA-Z0-9]/g,
+          "-"
+        )}.pdf"`,
+        "Content-Length": pdfBuffer.length.toString(),
       },
     });
-
-    // Ažuriraj status zahteva na COMPLETED ako je bio u PROCESSING
-    if (companyRequest.status === "PROCESSING") {
-      await prisma.companyRequest.update({
-        where: { id: requestId },
-        data: { status: "COMPLETED" },
-      });
-    }
-
-    return NextResponse.json({
-      message: "Document generated successfully",
-      document: generatedDocument,
-    });
   } catch (error) {
-    console.error("Error generating documents:", error);
+    console.error("Error generating preview:", error);
     return NextResponse.json(
       {
-        error: "Failed to generate documents",
+        error: "Failed to generate preview",
         details: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }

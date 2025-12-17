@@ -31,13 +31,17 @@ Skraćena firma Društva je: "<strong>{{companyName}}</strong>" doo</p>
 Adresa za prijem službene pošte je {{address}}, a adresa za prijem elektronske pošte je {{email}}<br />
 Kontakt telefon je {{phone}}</p>
 
-{{#unless isPreview}}
-
 <p><strong>4.</strong> Osnivač Društva je:
+{{#if isPreview}}
+<span style="filter: blur(4px); background: rgba(0,0,0,0.05); padding: 2px 8px;">[PODACI OSNIVAČA - DOSTUPNO NAKON PLAĆANJA]</span>
+{{else}}
 {{#each founders}}
 <strong>{{name}}</strong>, rođen/a {{birthPlace}}, Crna Gora, dokument broj {{idNumber}}, izdat {{issuedBy}}, sa boravištem u {{address}}{{#unless @last}}; {{/unless}}
 {{/each}}
+{{/if}}
 </p>
+
+{{#unless isPreview}}
 
 <p><strong>5.</strong> U svom poslovanju Društvo upotrebljava pečat i štambilj koji sadrže naziv i sjedište Društva.<br />
 Oblik, veličinu i način upotrebe pečata i štambilja propisuje izvršni direktor Društva.</p>
@@ -47,17 +51,25 @@ Oblik, veličinu i način upotrebe pečata i štambilja propisuje izvršni direk
 <h3 style="margin-top: 25px;">DJELATNOST</h3>
 
 <p><strong>7.</strong> Djelatnost Društva je:</p>
+{{#if isPreview}}
+<p style="margin-left: 20px; filter: blur(4px); background: rgba(0,0,0,0.05); padding: 10px;">[KOMPLETAN SPISAK DJELATNOSTI - DOSTUPAN NAKON PLAĆANJA]</p>
+{{else}}
 <p style="margin-left: 20px; white-space: pre-wrap;">{{activity}}</p>
+{{/if}}
 
 <p><strong>8.</strong> Društvo može vršiti promjenu djelatnosti.<br />
 Odluku o promjeni djelatnosti donosi osnivač društva u pismenoj formi.</p>
 
-<h3 style="margin-top: 25px;">OSNOVNI KAPITAL, VRSTA I VISINA ULOGA, NAČIN UPISA I UPLATE ULOGA I VELIČINA UDIJELA</h3>
-
-<p><strong>9.</strong> Osnovni kapital Društva čini ulog njegovog osnivača u novcu koji iznosi {{capital}} €.</p>
-
 <p><strong>10.</strong> Shodno osnivačkom ulogu osnivač je vlasnik društva i raspolaže sa udijelom u društvu:</p>
+{{#if isPreview}}
+<p style="margin-left: 20px; filter: blur(4px); background: rgba(0,0,0,0.05); padding: 10px;">[RASPODJELA UDIJELA - DOSTUPNO NAKON PLAĆANJA]</p>
+{{else}}
 <ul style="margin-left: 20px;">
+{{#each founders}}
+  <li>{{name}} - {{sharePercentage}}%</li>
+{{/each}}
+</ul>
+{{/if}}tyle="margin-left: 20px;">
 {{#each founders}}
   <li>{{name}} - {{sharePercentage}}%</li>
 {{/each}}
@@ -108,7 +120,13 @@ Organ upravljanja u Društvu je izvršni direktor Društva.</p>
   <li>organizuje i rukovodi procesom rada i tekućim poslovima društva</li>
   <li>predlaže koncepciju poslovne politike Društva i operativne poslove i programe rada Društva</li>
   <li>odlučuje o radnim odnosima u Društvu (izuzev radnog odnosa osnivača Društva i lica sa posebnim ovlašćenjima i odgovornostima)</li>
-  <li>odgovoran je za zakonitost rada Društva</li>
+<p><strong>19.</strong> Za izvršnog direktora Društva imenovan je 
+{{#if isPreview}}
+<span style="filter: blur(4px); background: rgba(0,0,0,0.05); padding: 2px 8px;">[IME DIREKTORA - DOSTUPNO NAKON PLAĆANJA]</span>
+{{else}}
+<strong>{{founders.0.name}}</strong>, JMBG: {{founders.0.idNumber}}
+{{/if}}
+</p>
   <li>vrši i druge poslove po ovlašćenjima osnivača Društva</li>
 </ul>
 

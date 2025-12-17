@@ -70,8 +70,10 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (status === "PAID") {
       try {
         // Pozovi internu funkciju za generisanje dokumenata
-        const generateUrl = `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/company-request/${requestId}/generate-documents`;
-        
+        const generateUrl = `${
+          process.env.NEXTAUTH_URL || "http://localhost:3000"
+        }/api/company-request/${requestId}/generate-documents`;
+
         // Pokreni generisanje asinhrono (ne čekamo rezultat)
         fetch(generateUrl, {
           method: "POST",
