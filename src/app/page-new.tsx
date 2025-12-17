@@ -17,7 +17,6 @@ export default function Home() {
           <div className="bg-white p-6 rounded-lg shadow-lg inline-block">
             <div className="text-3xl font-bold text-blue-600 mb-2">100 EUR</div>
             <div className="text-gray-500">Kompletna dokumentacija</div>
-            <div className="text-sm text-gray-400 mt-1">plus PDV</div>
           </div>
         </div>
 
@@ -96,7 +95,7 @@ export default function Home() {
                 2
               </div>
               <h3 className="text-lg font-semibold mb-2">Izvrši plaćanje</h3>
-              <p className="text-gray-600">Uplati 121 EUR na naš žiro račun</p>
+              <p className="text-gray-600">Uplati 100 EUR na naš žiro račun</p>
             </div>
             <div className="text-center">
               <div className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-4 font-bold">

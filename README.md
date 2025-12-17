@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OtvoriFirmu - Automatizacija osnivanja D.O.O. u Crnoj Gori
 
-## Getting Started
+Next.js aplikacija za automatsko generisanje kompletne dokumentacije za osnivanje društva sa ograničenom odgovornošću (D.O.O.).
 
-First, run the development server:
+## 🚀 Getting Started
+
+### 1. Instaliraj dependencies
+
+```bash
+npm install
+```
+
+### 2. Postavi bazu podataka
+
+```bash
+# Pokreni Prisma migracije
+npx prisma migrate dev
+
+# Seeduj bazu (dodaje template za statut)
+npx prisma db seed
+```
+
+### 3. Pokreni development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ✨ Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 🧙 **Interaktivni wizard** - 4-step proces za unos podataka
+- 📄 **Automatsko generisanje statuta** - PDF dokument prilagođen vašim podacima
+- 💳 **Payment tracking** - Praćenje bankovnih uplata
+- 👨‍💼 **Admin panel** - Upravljanje zahtjevima i odobravanje plaćanja
+- 🔐 **Autentifikacija** - NextAuth.js sa role-based pristupom
+- 📊 **Prisma ORM** - Type-safe pristup MySQL bazi
 
-## Learn More
+## 📚 Dokumentacija
 
-To learn more about Next.js, take a look at the following resources:
+Detaljno uputstvo za sistem generisanja dokumenata: **[DOCUMENT_GENERATION.md](./DOCUMENT_GENERATION.md)**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠 Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Frontend**: Next.js 15, React 19, TailwindCSS 4
+- **Backend**: Next.js API Routes, NextAuth.js
+- **Database**: MySQL + Prisma ORM
+- **PDF Generation**: Puppeteer + Handlebars
+- **Forms**: React Hook Form + Zod
 
-## Deploy on Vercel
+## 🧪 Testing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# Kreiraj test korisnika
+node scripts/create-test-user.js
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Kreiraj test admin korisnika
+node scripts/create-admin-user.js
+
+# Kreiraj test company request
+node scripts/create-test-company.js
+
+# Testiraj generisanje dokumenata
+node scripts/test-document-generation.js [REQUEST_ID]
+```
+
+## 📖 Learn More
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Prisma Documentation](https://www.prisma.io/docs)
+- [NextAuth.js Documentation](https://next-auth.js.org)

@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id        Int              @id @default(autoincrement())
+  email     String           @unique
+  name      String?
+  role      Role             @default(USER)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  password  String
+  companies CompanyRequest[]
+  payments  Payment[]
+
+  @@map("users")
+}
+
+model CompanyRequest {
+  id             Int                 @id @default(autoincrement())
+  userId         Int
+  companyName    String
+  companyType    CompanyType
+  status         RequestStatus       @default(DRAFT)
+  capital        Decimal?            @db.Decimal(10, 2)
+  address        String?
+  email          String?
+  phone          String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  price          Decimal?            @db.Decimal(8, 2)
+  activityCodeId Int?
+  user           User                @relation(fields: [userId], references: [id])
+  activityCode   ActivityCode?       @relation(fields: [activityCodeId], references: [id])
+  founders       Founder[]
+  documents      GeneratedDocument[]
+  payment        Payment?
+
+  @@index([userId], map: "company_requests_userId_fkey")
+  @@index([activityCodeId], map: "company_requests_activityCodeId_fkey")
+  @@map("company_requests")
+}
+
+model Founder {
+  id               Int            @id @default(autoincrement())
+  companyRequestId Int
+  name             String
+  idDocumentType   IdDocumentType @default(ID_CARD)
+  idNumber         String
+  issuedBy         String         @default("")
+  birthPlace       String         @default("")
+  address          String
+  sharePercentage  Decimal        @db.Decimal(5, 2)
+  companyRequest   CompanyRequest @relation(fields: [companyRequestId], references: [id])
+
+  @@index([companyRequestId], map: "founders_companyRequestId_fkey")
+  @@map("founders")
+}
+
+model ActivityCode {
+  id              Int              @id @default(autoincrement())
+  code            String           @unique
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  description     String
+  companyRequests CompanyRequest[]
+
+  @@map("activity_codes")
+}
+
+model Template {
+  id          Int                 @id @default(autoincrement())
+  slug        String              @unique
+  name        String
+  description String?
+  content     String              @db.Text
+  variables   String?             @db.LongText
+  isActive    Boolean             @default(true)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  documents   GeneratedDocument[]
+
+  @@map("templates")
+}
+
+model GeneratedDocument {
+  id               Int            @id @default(autoincrement())
+  companyRequestId Int
+  templateId       Int
+  fileName         String
+  fileUrl          String?
+  mimeType         String
+  fileSize         Int?
+  metadata         String?        @db.LongText
+  createdAt        DateTime       @default(now())
+  companyRequest   CompanyRequest @relation(fields: [companyRequestId], references: [id])
+  template         Template       @relation(fields: [templateId], references: [id])
+
+  @@index([companyRequestId], map: "generated_documents_companyRequestId_fkey")
+  @@index([templateId], map: "generated_documents_templateId_fkey")
+  @@map("generated_documents")
+}
+
+model Payment {
+  id               Int            @id @default(autoincrement())
+  userId           Int
+  companyRequestId Int            @unique
+  amount           Decimal        @db.Decimal(8, 2)
+  currency         String         @default("RSD")
+  status           PaymentStatus  @default(PENDING)
+  paymentMethod    String         @default("bank_transfer")
+  referenceNumber  String?
+  adminNotes       String?
+  approvedAt       DateTime?
+  approvedBy       Int?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  user             User           @relation(fields: [userId], references: [id])
+  companyRequest   CompanyRequest @relation(fields: [companyRequestId], references: [id])
+
+  @@index([userId], map: "payments_userId_fkey")
+  @@map("payments")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum CompanyType {
+  DOO
+  PREDUZETNIK
+  ORTAKLUK
+}
+
+enum IdDocumentType {
+  PASSPORT
+  ID_CARD
+}
+
+enum RequestStatus {
+  DRAFT
+  AWAITING_PAYMENT
+  PAYMENT_PENDING
+  PAID
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
