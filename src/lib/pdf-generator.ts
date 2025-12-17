@@ -8,10 +8,16 @@ interface DocumentData {
     idNumber: string;
     address: string;
     sharePercentage: number;
+    birthPlace?: string;
+    issuedBy?: string;
   }>;
   capital: number;
   activity: string;
   address: string;
+  email?: string;
+  phone?: string;
+  currentDate?: string;
+  activityCode?: string;
 }
 
 export class PDFGenerator {

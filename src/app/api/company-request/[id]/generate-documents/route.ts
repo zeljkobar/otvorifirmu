@@ -94,13 +94,19 @@ export async function POST(
     const templateData = {
       companyName: companyRequest.companyName,
       address: companyRequest.address || "",
+      email: companyRequest.email || "",
+      phone: companyRequest.phone || "",
       activity: companyRequest.activityCode?.description || "Neodređena djelatnost",
+      activityCode: companyRequest.activityCode?.code || "",
       capital: Number(companyRequest.capital || 0),
+      currentDate: new Date().toLocaleDateString("sr-RS"),
       founders: companyRequest.founders.map((founder) => ({
         name: founder.name,
         idNumber: founder.idNumber,
         address: founder.address,
         sharePercentage: Number(founder.sharePercentage),
+        birthPlace: founder.birthPlace || "",
+        issuedBy: founder.issuedBy || "",
       })),
     };
 
