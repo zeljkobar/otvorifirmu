@@ -199,12 +199,20 @@ export default async function RequestDetailPage({ params }: Props) {
                     {companyRequest.price?.toString()} EUR
                   </p>
                 </div>
-                <div className="md:col-span-2">
+                <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Adresa
                   </label>
                   <p className="mt-1 text-sm text-gray-900">
                     {companyRequest.address}
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Grad
+                  </label>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {companyRequest.city}
                   </p>
                 </div>
               </div>
@@ -274,7 +282,7 @@ export default async function RequestDetailPage({ params }: Props) {
                     Dokumenti
                   </h2>
                 </div>
-                
+
                 {/* Lista postojećih dokumenata */}
                 {companyRequest.documents.length > 0 && (
                   <div className="space-y-3 mb-4">
@@ -306,7 +314,7 @@ export default async function RequestDetailPage({ params }: Props) {
                     ))}
                   </div>
                 )}
-                
+
                 {/* Dugme za generisanje/regenerisanje */}
                 <GenerateDocumentsButton
                   requestId={companyRequest.id}

@@ -26,8 +26,9 @@ export default function WizardPage() {
     // Korak 1 - Osnovni podaci
     companyName: "",
     companyType: "DOO",
-    capital: "1000",
+    capital: "1",
     address: "",
+    city: "",
     email: "",
     phone: "",
 
@@ -91,6 +92,7 @@ export default function WizardPage() {
         if (!formData.companyType) errors.push("Tip firme je obavezan");
         if (!formData.capital) errors.push("Osnivački kapital je obavezan");
         if (!formData.address.trim()) errors.push("Adresa firme je obavezna");
+        if (!formData.city.trim()) errors.push("Grad je obavezan");
         if (!formData.email.trim())
           errors.push("Email adresa firme je obavezna");
         if (!formData.phone.trim())
@@ -330,8 +332,22 @@ export default function WizardPage() {
                 value={formData.address}
                 onChange={(e) => updateFormData("address", e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                placeholder="Ulica i broj, grad, poštanski broj, Crna Gora"
-                rows={3}
+                placeholder="Ulica i broj, poštanski broj"
+                rows={2}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                Grad *
+              </label>
+              <input
+                type="text"
+                value={formData.city}
+                onChange={(e) => updateFormData("city", e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                placeholder="Npr. Podgorica, Bar, Budva..."
                 required
               />
             </div>
@@ -735,11 +751,11 @@ export default function WizardPage() {
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <h4 className="text-sm font-medium text-blue-900 mb-2">
-                Slede\u0107i koraci
+                Sledeći koraci
               </h4>
               <p className="text-sm text-blue-700">
-                Nakon potvrde, va\u0161 zahtev \u0107e biti kreiran sa statusom
-                "Draft". Trebalo bi da izvr\u0161ite pla\u0107anje od 121 EUR
+                Nakon potvrde, vaš zahtev će biti kreiran sa statusom
+                &quot;Draft&quot;. Trebalo bi da izvršite plaćanje od 121 EUR
                 (100 + PDV) da biste pokrenuli proces.
               </p>
             </div>

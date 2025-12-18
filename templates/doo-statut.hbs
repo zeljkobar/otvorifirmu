@@ -7,11 +7,11 @@
 <p style="margin-bottom: 5px;">Na osnovu člana 271 zakona o privrednim društvima (Sl. List RCG 065/20)</p>
 
 <p style="margin-bottom: 8px;">
-{{#each founders}}<strong>{{name}}</strong>{{#unless @last}}, {{/unless}}{{/each}} iz {{address}}, {{#if founders.0.isResident}}JMBG: {{founders.0.jmbg}}{{else}}pasoš broj {{founders.0.idNumber}}{{/if}} osnivač DOO "{{companyName}}", {{address}} dana {{currentDate}} donijeo/la je
+{{#each founders}}<strong>{{name}}</strong>{{#unless @last}}, {{/unless}}{{/each}} iz {{city}}, {{#if founders.0.isResident}}JMBG: {{founders.0.jmbg}}{{else}}pasoš broj {{founders.0.idNumber}}{{/if}} osnivač DOO "{{companyName}}", {{address}}, {{city}} dana {{currentDate}} donijeo/la je
 </p>
 
 <h1 style="text-align: center; margin: 12px 0;">STATUT</h1>
-<h2 style="text-align: center; margin: 10px 0;">D.O.O. "{{companyName}}"</h2>
+<h2 style="text-align: center; margin: 10px 0;">D.O.O. "{{companyName}}" {{city}}</h2>
 
 <h3 style="margin-top: 15px; margin-bottom: 8px;">OSNOVNE ODREDBE</h3>
 
@@ -27,10 +27,9 @@
     Skraćena firma Društva je: "<strong>{{companyName}}</strong>" doo</p>
 
   <p><strong>3.</strong>
-    Sjedište DRUŠTVA je u
-    {{address}}<br />
+    Sjedište DRUŠTVA je u {{cityLocative}}, {{address}}<br />
     Adresa za prijem službene pošte je
-    {{address}}, a adresa za prijem elektronske pošte je
+    {{address}}, {{city}}, a adresa za prijem elektronske pošte je
     {{email}}<br />
     Kontakt telefon je
     {{phone}}</p>

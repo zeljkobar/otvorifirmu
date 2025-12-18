@@ -3,6 +3,36 @@ import { getAuthSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { pdfGenerator } from "@/lib/pdf-generator";
 
+// Helper funkcija za sklanjanje gradova u lokativ (7. padež)
+function getCityLocative(city: string): string {
+  const cityMap: Record<string, string> = {
+    "Bar": "Baru",
+    "Podgorica": "Podgorici",
+    "Budva": "Budvi",
+    "Nikšić": "Nikšiću",
+    "Herceg Novi": "Herceg Novom",
+    "Pljevlja": "Pljevljima",
+    "Bijelo Polje": "Bijelom Polju",
+    "Cetinje": "Cetinju",
+    "Berane": "Beranama",
+    "Ulcinj": "Ulcinju",
+    "Tivat": "Tivtu",
+    "Rožaje": "Rožajama",
+    "Kotor": "Kotoru",
+    "Mojkovac": "Mojkovcu",
+    "Plav": "Plavu",
+    "Kolašin": "Kolašinu",
+    "Danilovgrad": "Danilovgradu",
+    "Žabljak": "Žabljaku",
+    "Andrijevica": "Andrijevici",
+    "Šavnik": "Šavniku",
+    "Plužine": "Plužinama",
+    "Petnjica": "Petnjici",
+    "Gusinje": "Gusinju",
+  };
+  return cityMap[city] || city + "u";
+}
+
 interface RouteParams {
   params: Promise<{
     id: string;
@@ -83,6 +113,8 @@ export async function GET(
     const templateData = {
       companyName: companyRequest.companyName,
       address: companyRequest.address || "",
+      city: companyRequest.city || "",
+      cityLocative: getCityLocative(companyRequest.city || ""),
       email: companyRequest.email || "",
       phone: companyRequest.phone || "",
       activity:
@@ -93,6 +125,8 @@ export async function GET(
       currentDate: new Date().toLocaleDateString("sr-RS"),
       founders: companyRequest.founders.map((founder) => ({
         name: founder.name,
+        isResident: founder.isResident,
+        jmbg: founder.jmbg || "",
         idNumber: founder.idNumber,
         address: founder.address,
         sharePercentage: Number(founder.sharePercentage),

@@ -5,6 +5,36 @@ import { pdfGenerator } from "@/lib/pdf-generator";
 import fs from "fs";
 import path from "path";
 
+// Helper funkcija za sklanjanje gradova u lokativ (7. padež)
+function getCityLocative(city: string): string {
+  const cityMap: Record<string, string> = {
+    "Bar": "Baru",
+    "Podgorica": "Podgorici",
+    "Budva": "Budvi",
+    "Nikšić": "Nikšiću",
+    "Herceg Novi": "Herceg Novom",
+    "Pljevlja": "Pljevljima",
+    "Bijelo Polje": "Bijelom Polju",
+    "Cetinje": "Cetinju",
+    "Berane": "Beranama",
+    "Ulcinj": "Ulcinju",
+    "Tivat": "Tivtu",
+    "Rožaje": "Rožajama",
+    "Kotor": "Kotoru",
+    "Mojkovac": "Mojkovcu",
+    "Plav": "Plavu",
+    "Kolašin": "Kolašinu",
+    "Danilovgrad": "Danilovgradu",
+    "Žabljak": "Žabljaku",
+    "Andrijevica": "Andrijevici",
+    "Šavnik": "Šavniku",
+    "Plužine": "Plužinama",
+    "Petnjica": "Petnjici",
+    "Gusinje": "Gusinju",
+  };
+  return cityMap[city] || city + "u"; // fallback: dodaj "u" ako grad nije u mapi
+}
+
 interface RouteParams {
   params: Promise<{
     id: string;
@@ -66,18 +96,6 @@ export async function POST(
       );
     }
 
-    // Proveri da li dokumenti već postoje
-    const existingDocs = await prisma.generatedDocument.findMany({
-      where: { companyRequestId: requestId },
-    });
-
-    if (existingDocs.length > 0) {
-      return NextResponse.json({
-        message: "Documents already exist",
-        documents: existingDocs,
-      });
-    }
-
     // Dohvati template iz baze
     const template = await prisma.template.findUnique({
       where: { slug: "doo-statut" },
@@ -110,6 +128,8 @@ export async function POST(
     const templateData = {
       companyName: companyRequest.companyName,
       address: companyRequest.address || "",
+      city: companyRequest.city || "",
+      cityLocative: getCityLocative(companyRequest.city || ""),
       email: companyRequest.email || "",
       phone: companyRequest.phone || "",
       activity:
@@ -120,6 +140,8 @@ export async function POST(
       currentDate: new Date().toLocaleDateString("sr-RS"),
       founders: companyRequest.founders.map((founder) => ({
         name: founder.name,
+        isResident: founder.isResident,
+        jmbg: founder.jmbg || "",
         idNumber: founder.idNumber,
         address: founder.address,
         sharePercentage: Number(founder.sharePercentage),
@@ -141,6 +163,30 @@ export async function POST(
       fs.mkdirSync(docsDir, { recursive: true });
     }
 
+    // Obriši stare dokumente pre generisanja novog
+    console.log("Checking for old documents for request:", requestId);
+    const oldDocuments = await prisma.generatedDocument.findMany({
+      where: { companyRequestId: requestId },
+    });
+    console.log("Found old documents:", oldDocuments.length);
+
+    // Obriši stare PDF fajlove sa diska
+    for (const doc of oldDocuments) {
+      const oldFilePath = path.join(docsDir, doc.fileName);
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath);
+        console.log("Deleted old PDF:", oldFilePath);
+      }
+    }
+
+    // Obriši zapise iz baze
+    if (oldDocuments.length > 0) {
+      await prisma.generatedDocument.deleteMany({
+        where: { companyRequestId: requestId },
+      });
+      console.log("Deleted old document records from database");
+    }
+
     // Generiši jedinstveno ime fajla
     const sanitizedName = companyRequest.companyName
       .replace(/[^a-zA-Z0-9\s]/g, "")
@@ -150,9 +196,10 @@ export async function POST(
     const fileName = `statut-${sanitizedName}-${timestamp}.pdf`;
     const filePath = path.join(docsDir, fileName);
 
-    // Sačuvaj PDF na disk
+    // Sačuvaj novi PDF na disk
+    console.log("Saving new PDF to:", filePath);
     fs.writeFileSync(filePath, pdfBuffer);
-    console.log("PDF saved to:", filePath);
+    console.log("PDF saved successfully!");
 
     // Sačuvaj metadata u bazu
     const generatedDocument = await prisma.generatedDocument.create({

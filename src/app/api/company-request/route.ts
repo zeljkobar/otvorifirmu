@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
       companyType,
       capital,
       address,
+      city,
       email,
       phone,
       activityCode,
@@ -44,6 +45,7 @@ export async function POST(request: NextRequest) {
       !companyType ||
       !capital ||
       !address ||
+      !city ||
       !email ||
       !phone ||
       !activityCode ||
@@ -88,6 +90,7 @@ export async function POST(request: NextRequest) {
         companyType,
         capital: parseFloat(capital),
         address,
+        city,
         email,
         phone,
         activityCodeId: activityCodeRecord.id,
