@@ -38,6 +38,8 @@ export default function WizardPage() {
     founders: [
       {
         name: "",
+        isResident: true,
+        jmbg: "",
         idDocumentType: "ID_CARD",
         idNumber: "",
         issuedBy: "",
@@ -109,6 +111,9 @@ export default function WizardPage() {
         formData.founders.forEach((founder, index) => {
           if (!founder.name.trim())
             errors.push(`Ime osnivača ${index + 1} je obavezno`);
+          // Validacija JMBG samo za rezidente
+          if (founder.isResident && !founder.jmbg?.trim())
+            errors.push(`JMBG osnivača ${index + 1} je obavezan`);
           if (!founder.idDocumentType)
             errors.push(`Tip dokumenta osnivača ${index + 1} je obavezan`);
           if (!founder.idNumber.trim())
@@ -164,7 +169,7 @@ export default function WizardPage() {
     }
   };
 
-  const updateFormData = (field: string, value: any) => {
+  const updateFormData = (field: string, value: string | number | boolean) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -178,6 +183,8 @@ export default function WizardPage() {
         ...prev.founders,
         {
           name: "",
+          isResident: true,
+          jmbg: "",
           idDocumentType: "ID_CARD",
           idNumber: "",
           issuedBy: "",
@@ -189,12 +196,29 @@ export default function WizardPage() {
     }));
   };
 
-  const updateFounder = (index: number, field: string, value: string) => {
+  const updateFounder = (
+    index: number,
+    field: string,
+    value: string | boolean
+  ) => {
     setFormData((prev) => ({
       ...prev,
-      founders: prev.founders.map((founder, i) =>
-        i === index ? { ...founder, [field]: value } : founder
-      ),
+      founders: prev.founders.map((founder, i) => {
+        if (i === index) {
+          const updated = { ...founder, [field]: value };
+          // Ako se postavlja nerezident, automatski postavi PASSPORT
+          if (field === "isResident" && value === false) {
+            updated.idDocumentType = "PASSPORT";
+            updated.jmbg = ""; // Obriši JMBG za nerezidente
+          }
+          // Ako se postavlja rezident, automatski postavi ID_CARD
+          if (field === "isResident" && value === true) {
+            updated.idDocumentType = "ID_CARD";
+          }
+          return updated;
+        }
+        return founder;
+      }),
     }));
   };
 
@@ -231,10 +255,12 @@ export default function WizardPage() {
         const result = await response.json();
         router.push(`/request/${result.id}`);
       } else {
-        console.error("Error creating company request");
+        const errorData = await response.json();
+        alert(`Greška: ${errorData.error || "Nepoznata greška"}`);
       }
     } catch (error) {
       console.error("Error:", error);
+      alert("Greška pri slanju zahtjeva. Molimo pokušajte ponovo.");
     }
   };
 
@@ -248,27 +274,27 @@ export default function WizardPage() {
             </h3>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Naziv firme *
               </label>
               <input
                 type="text"
                 value={formData.companyName}
                 onChange={(e) => updateFormData("companyName", e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 placeholder="Npr. Moja Firma D.O.O."
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Tip firme *
               </label>
               <select
                 value={formData.companyType}
                 onChange={(e) => updateFormData("companyType", e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
               >
                 <option value="DOO">
                   D.O.O. (Društvo sa ograničenom odgovornošću)
@@ -279,31 +305,31 @@ export default function WizardPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Osnivački kapital (EUR) *
               </label>
               <input
                 type="number"
                 value={formData.capital}
                 onChange={(e) => updateFormData("capital", e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 placeholder="1000"
                 min="1"
                 required
               />
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-gray-700 mt-1">
                 Minimalni kapital za D.O.O. je 1 EUR
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Adresa firme *
               </label>
               <textarea
                 value={formData.address}
                 onChange={(e) => updateFormData("address", e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 placeholder="Ulica i broj, grad, poštanski broj, Crna Gora"
                 rows={3}
                 required
@@ -311,28 +337,28 @@ export default function WizardPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Email adresa firme *
               </label>
               <input
                 type="email"
                 value={formData.email}
                 onChange={(e) => updateFormData("email", e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 placeholder="info@mojafirma.me"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Broj telefona firme *
               </label>
               <input
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => updateFormData("phone", e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 placeholder="+382 XX XXX XXX"
                 required
               />
@@ -348,13 +374,13 @@ export default function WizardPage() {
             </h3>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Glavna djelatnost firme *
               </label>
               <select
                 value={formData.activityCode}
                 onChange={(e) => updateFormData("activityCode", e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 required
                 disabled={isLoadingActivityCodes}
               >
@@ -369,7 +395,7 @@ export default function WizardPage() {
                   </option>
                 ))}
               </select>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-gray-700 mt-1">
                 Možete dodati dodatne djelatnosti kasnije
               </p>
             </div>
@@ -423,7 +449,7 @@ export default function WizardPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
                       Ime i prezime *
                     </label>
                     <input
@@ -432,14 +458,64 @@ export default function WizardPage() {
                       onChange={(e) =>
                         updateFounder(index, "name", e.target.value)
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="Marko Marković"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Status rezidentnosti *
+                    </label>
+                    <div className="flex gap-4 pt-2">
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="radio"
+                          name={`resident-${index}`}
+                          checked={founder.isResident === true}
+                          onChange={() =>
+                            updateFounder(index, "isResident", true)
+                          }
+                          className="mr-2"
+                        />
+                        <span className="text-sm">Rezident Crne Gore</span>
+                      </label>
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="radio"
+                          name={`resident-${index}`}
+                          checked={founder.isResident === false}
+                          onChange={() =>
+                            updateFounder(index, "isResident", false)
+                          }
+                          className="mr-2"
+                        />
+                        <span className="text-sm">Nerezident/Stranac</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {founder.isResident && (
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        JMBG *
+                      </label>
+                      <input
+                        type="text"
+                        value={founder.jmbg}
+                        onChange={(e) =>
+                          updateFounder(index, "jmbg", e.target.value)
+                        }
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                        placeholder="1234567890123"
+                        required
+                      />
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
                       Tip identifikacionog dokumenta *
                     </label>
                     <select
@@ -447,16 +523,24 @@ export default function WizardPage() {
                       onChange={(e) =>
                         updateFounder(index, "idDocumentType", e.target.value)
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       required
+                      disabled={founder.isResident === false}
                     >
-                      <option value="ID_CARD">Lična karta</option>
+                      {founder.isResident !== false && (
+                        <option value="ID_CARD">Lična karta</option>
+                      )}
                       <option value="PASSPORT">Pasoš</option>
                     </select>
+                    {founder.isResident === false && (
+                      <p className="text-sm text-gray-600 mt-1">
+                        * Nerezidenti mogu koristiti samo pasoš
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
                       Broj dokumenta *
                     </label>
                     <input
@@ -465,7 +549,7 @@ export default function WizardPage() {
                       onChange={(e) =>
                         updateFounder(index, "idNumber", e.target.value)
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder={
                         founder.idDocumentType === "PASSPORT"
                           ? "ME123456789"
@@ -476,7 +560,7 @@ export default function WizardPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
                       Izdato od strane *
                     </label>
                     <input
@@ -485,14 +569,14 @@ export default function WizardPage() {
                       onChange={(e) =>
                         updateFounder(index, "issuedBy", e.target.value)
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="MUP Crne Gore"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
                       Mjesto rođenja *
                     </label>
                     <input
@@ -501,14 +585,14 @@ export default function WizardPage() {
                       onChange={(e) =>
                         updateFounder(index, "birthPlace", e.target.value)
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="Podgorica, Crna Gora"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
                       Udeo u kapitalu (%) *
                     </label>
                     <input
@@ -517,7 +601,7 @@ export default function WizardPage() {
                       onChange={(e) =>
                         updateFounder(index, "sharePercentage", e.target.value)
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="100"
                       min="0"
                       max="100"
@@ -526,7 +610,7 @@ export default function WizardPage() {
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
                       Adresa prebivališta *
                     </label>
                     <textarea
@@ -534,7 +618,7 @@ export default function WizardPage() {
                       onChange={(e) =>
                         updateFounder(index, "address", e.target.value)
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="Ulica i broj, grad, poštanski broj, Crna Gora"
                       rows={2}
                       required
@@ -570,71 +654,72 @@ export default function WizardPage() {
 
             <div className="bg-gray-50 rounded-lg p-6 space-y-4">
               <div>
-                <h4 className="font-medium text-gray-900 mb-2">
+                <h4 className="font-semibold text-gray-900 mb-2">
                   Osnovni podaci
                 </h4>
-                <div className="text-sm text-gray-600 space-y-1">
+                <div className="text-sm text-gray-800 space-y-1">
                   <p>
-                    <span className="font-medium">Naziv:</span>{" "}
+                    <span className="font-semibold">Naziv:</span>{" "}
                     {formData.companyName}
                   </p>
                   <p>
-                    <span className="font-medium">Tip:</span>{" "}
+                    <span className="font-semibold">Tip:</span>{" "}
                     {formData.companyType}
                   </p>
                   <p>
-                    <span className="font-medium">Kapital:</span>{" "}
+                    <span className="font-semibold">Kapital:</span>{" "}
                     {formData.capital} EUR
                   </p>
                   <p>
-                    <span className="font-medium">Adresa:</span>{" "}
+                    <span className="font-semibold">Adresa:</span>{" "}
                     {formData.address}
                   </p>
                   <p>
-                    <span className="font-medium">Email:</span> {formData.email}
+                    <span className="font-semibold">Email:</span>{" "}
+                    {formData.email}
                   </p>
                   <p>
-                    <span className="font-medium">Telefon:</span>{" "}
+                    <span className="font-semibold">Telefon:</span>{" "}
                     {formData.phone}
                   </p>
                 </div>
               </div>
 
               <div>
-                <h4 className="font-medium text-gray-900 mb-2">Delatnost</h4>
-                <p className="text-sm text-gray-600">{formData.activityCode}</p>
+                <h4 className="font-semibold text-gray-900 mb-2">Delatnost</h4>
+                <p className="text-sm text-gray-800">{formData.activityCode}</p>
               </div>
 
               <div>
-                <h4 className="font-medium text-gray-900 mb-2">
+                <h4 className="font-semibold text-gray-900 mb-2">
                   Osnivači ({formData.founders.length})
                 </h4>
                 <div className="space-y-3">
                   {formData.founders.map((founder, index) => (
                     <div
                       key={index}
-                      className="text-sm text-gray-600 bg-white p-3 rounded border"
+                      className="text-sm text-gray-800 bg-white p-3 rounded border"
                     >
-                      <p className="font-medium text-gray-900 mb-1">
+                      <p className="font-semibold text-gray-900 mb-1">
                         {founder.name} - {founder.sharePercentage}%
                       </p>
                       <p>
-                        <span className="font-medium">Dokument:</span>{" "}
+                        <span className="font-semibold">Dokument:</span>{" "}
                         {founder.idDocumentType === "PASSPORT"
                           ? "Pasoš"
                           : "Lična karta"}{" "}
                         ({founder.idNumber})
                       </p>
                       <p>
-                        <span className="font-medium">Izdato od:</span>{" "}
+                        <span className="font-semibold">Izdato od:</span>{" "}
                         {founder.issuedBy}
                       </p>
                       <p>
-                        <span className="font-medium">Rođen u:</span>{" "}
+                        <span className="font-semibold">Rođen u:</span>{" "}
                         {founder.birthPlace}
                       </p>
                       <p>
-                        <span className="font-medium">Adresa:</span>{" "}
+                        <span className="font-semibold">Adresa:</span>{" "}
                         {founder.address}
                       </p>
                     </div>
@@ -650,12 +735,12 @@ export default function WizardPage() {
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <h4 className="text-sm font-medium text-blue-900 mb-2">
-                Sledeći koraci
+                Slede\u0107i koraci
               </h4>
               <p className="text-sm text-blue-700">
-                Nakon potvrde, vaš zahtev će biti kreiran sa statusom "Draft".
-                Trebalo bi da izvršite plaćanje od 121 EUR (100 + PDV) da biste
-                pokrenuli proces.
+                Nakon potvrde, va\u0161 zahtev \u0107e biti kreiran sa statusom
+                "Draft". Trebalo bi da izvr\u0161ite pla\u0107anje od 121 EUR
+                (100 + PDV) da biste pokrenuli proces.
               </p>
             </div>
           </div>

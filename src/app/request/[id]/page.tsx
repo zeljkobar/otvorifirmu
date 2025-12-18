@@ -264,7 +264,9 @@ export default async function RequestDetailPage({ params }: Props) {
             </div>
 
             {/* Documents */}
-            {companyRequest.documents.length > 0 ? (
+            {(companyRequest.status === "PAID" ||
+              companyRequest.status === "PROCESSING" ||
+              companyRequest.status === "COMPLETED") && (
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center mb-4">
                   <FileText className="w-5 h-5 text-gray-400 mr-2" />
@@ -272,57 +274,50 @@ export default async function RequestDetailPage({ params }: Props) {
                     Dokumenti
                   </h2>
                 </div>
-                <div className="space-y-3">
-                  {companyRequest.documents.map((document) => (
-                    <div
-                      key={document.id}
-                      className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
-                    >
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">
-                          {document.fileName}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          Kreiran:{" "}
-                          {new Date(document.createdAt).toLocaleDateString(
-                            "sr-RS"
-                          )}
-                        </p>
-                      </div>
-                      <a
-                        href={`/api/company-request/${companyRequest.id}/download/${document.fileName}`}
-                        download
-                        className="flex items-center text-blue-600 hover:text-blue-700 text-sm"
+                
+                {/* Lista postojećih dokumenata */}
+                {companyRequest.documents.length > 0 && (
+                  <div className="space-y-3 mb-4">
+                    {companyRequest.documents.map((document) => (
+                      <div
+                        key={document.id}
+                        className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
                       >
-                        <Download className="w-4 h-4 mr-1" />
-                        Download
-                      </a>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              (companyRequest.status === "PAID" ||
-                companyRequest.status === "PROCESSING" ||
-                companyRequest.status === "COMPLETED") && (
-                <div className="bg-white rounded-lg shadow p-6">
-                  <div className="flex items-center mb-4">
-                    <FileText className="w-5 h-5 text-gray-400 mr-2" />
-                    <h2 className="text-lg font-medium text-gray-900">
-                      Dokumenti
-                    </h2>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">
+                            {document.fileName}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            Kreiran:{" "}
+                            {new Date(document.createdAt).toLocaleDateString(
+                              "sr-RS"
+                            )}
+                          </p>
+                        </div>
+                        <a
+                          href={`/api/company-request/${companyRequest.id}/download/${document.fileName}`}
+                          download
+                          className="flex items-center text-blue-600 hover:text-blue-700 text-sm"
+                        >
+                          <Download className="w-4 h-4 mr-1" />
+                          Download
+                        </a>
+                      </div>
+                    ))}
                   </div>
-                  <GenerateDocumentsButton
-                    requestId={companyRequest.id}
-                    hasDocuments={companyRequest.documents.length > 0}
-                    canGenerate={
-                      companyRequest.status === "PAID" ||
-                      companyRequest.status === "PROCESSING" ||
-                      companyRequest.status === "COMPLETED"
-                    }
-                  />
-                </div>
-              )
+                )}
+                
+                {/* Dugme za generisanje/regenerisanje */}
+                <GenerateDocumentsButton
+                  requestId={companyRequest.id}
+                  hasDocuments={companyRequest.documents.length > 0}
+                  canGenerate={
+                    companyRequest.status === "PAID" ||
+                    companyRequest.status === "PROCESSING" ||
+                    companyRequest.status === "COMPLETED"
+                  }
+                />
+              </div>
             )}
           </div>
 
@@ -419,17 +414,6 @@ export default async function RequestDetailPage({ params }: Props) {
                   <FileText className="w-4 h-4 mr-2" />
                   Pregled statuta (Preview)
                 </a>
-
-                {companyRequest.documents.length === 0 &&
-                  (companyRequest.status === "PAID" ||
-                    companyRequest.status === "PROCESSING" ||
-                    companyRequest.status === "COMPLETED") && (
-                    <GenerateDocumentsButton
-                      requestId={companyRequest.id}
-                      hasDocuments={false}
-                      canGenerate={true}
-                    />
-                  )}
 
                 {companyRequest.documents.length > 0 &&
                   companyRequest.documents.map((doc) => (

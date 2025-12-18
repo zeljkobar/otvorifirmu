@@ -1,6 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { IdDocumentType } from "@prisma/client";
+
+interface FounderInput {
+  name: string;
+  isResident?: boolean;
+  jmbg?: string;
+  idDocumentType?: string;
+  idNumber: string;
+  issuedBy?: string;
+  birthPlace?: string;
+  address: string;
+  sharePercentage: string;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,14 +56,26 @@ export async function POST(request: NextRequest) {
     }
 
     // Provera da li udeli osnivača čine 100%
-    const totalShares = founders.reduce(
-      (sum: number, founder: any) =>
+    const totalShares = (founders as FounderInput[]).reduce(
+      (sum: number, founder: FounderInput) =>
         sum + parseFloat(founder.sharePercentage || "0"),
       0
     );
     if (totalShares !== 100) {
       return NextResponse.json(
         { error: "Ukupan udeo osnivača mora biti 100%" },
+        { status: 400 }
+      );
+    }
+
+    // Pronađi ActivityCode po code-u
+    const activityCodeRecord = await prisma.activityCode.findFirst({
+      where: { code: activityCode },
+    });
+
+    if (!activityCodeRecord) {
+      return NextResponse.json(
+        { error: "Šifra djelatnosti nije pronađena" },
         { status: 400 }
       );
     }
@@ -65,13 +90,18 @@ export async function POST(request: NextRequest) {
         address,
         email,
         phone,
+        activityCodeId: activityCodeRecord.id,
         price: 121.0, // 100 EUR + 21% PDV
         status: "DRAFT",
-        // Dodaćemo activityCode povezivanje kasnije
         founders: {
-          create: founders.map((founder: any) => ({
+          create: (founders as FounderInput[]).map((founder: FounderInput) => ({
             name: founder.name,
-            idDocumentType: founder.idDocumentType || "ID_CARD",
+            isResident:
+              founder.isResident !== undefined ? founder.isResident : true,
+            jmbg: founder.jmbg || null,
+            idDocumentType:
+              (founder.idDocumentType as IdDocumentType) ||
+              IdDocumentType.ID_CARD,
             idNumber: founder.idNumber,
             issuedBy: founder.issuedBy || "",
             birthPlace: founder.birthPlace || "",
@@ -88,8 +118,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(companyRequest);
   } catch (error) {
     console.error("Error creating company request:", error);
+    console.error(
+      "Error stack:",
+      error instanceof Error ? error.stack : "No stack"
+    );
+    console.error(
+      "Error message:",
+      error instanceof Error ? error.message : String(error)
+    );
     return NextResponse.json(
-      { error: "Greška pri kreiranju zahteva" },
+      {
+        error: "Greška pri kreiranju zahteva",
+        details: error instanceof Error ? error.message : String(error),
+      },
       { status: 500 }
     );
   }

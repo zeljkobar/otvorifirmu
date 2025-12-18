@@ -108,17 +108,40 @@ export class PDFGenerator {
         <meta charset="utf-8">
         <style>
           body { 
-            font-family: Arial, sans-serif; 
-            margin: 40px;
+            font-family: 'Times New Roman', serif;
+            font-size: 11pt;
+            margin: 0;
+            padding: 0;
           }
           .content {
-            line-height: 1.6;
+            line-height: 1.4;
           }
-          h1, h2 { color: #2c3e50; }
+          h1 { 
+            font-size: 16pt;
+            margin: 10px 0;
+            text-align: center;
+          }
+          h2 { 
+            font-size: 14pt;
+            margin: 8px 0;
+            text-align: center;
+          }
+          h3 { 
+            font-size: 12pt;
+            margin-top: 15px;
+            margin-bottom: 8px;
+          }
+          p {
+            margin: 5px 0;
+            text-align: justify;
+          }
+          ul, ol {
+            margin: 5px 0;
+            padding-left: 20px;
+          }
           .signature-section {
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
+            margin-top: 30px;
+            page-break-inside: avoid;
           }
         </style>
       </head>
@@ -149,7 +172,7 @@ export class PDFGenerator {
       const pdfOptions = {
         format: "A4" as const,
         printBackground: true,
-        margin: { top: "20mm", bottom: "20mm", left: "20mm", right: "20mm" },
+        margin: { top: "15mm", bottom: "15mm", left: "20mm", right: "20mm" },
         displayHeaderFooter: false,
         headerTemplate: "",
       };

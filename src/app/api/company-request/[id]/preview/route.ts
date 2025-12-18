@@ -64,6 +64,21 @@ export async function GET(
       );
     }
 
+    // Učitaj sve djelatnosti iz baze
+    const allActivityCodes = await prisma.activityCode.findMany({
+      where: { isActive: true },
+      orderBy: { code: "asc" },
+    });
+
+    // Formatiraj sve djelatnosti - bold-uj izabranu
+    const selectedCode = companyRequest.activityCode?.code || "";
+    const allActivitiesText = allActivityCodes
+      .map((ac) => {
+        const text = `${ac.code} - ${ac.description}`;
+        return ac.code === selectedCode ? `<strong>${text}</strong>` : text;
+      })
+      .join("\n");
+
     // Pripremi podatke za template
     const templateData = {
       companyName: companyRequest.companyName,
@@ -73,6 +88,7 @@ export async function GET(
       activity:
         companyRequest.activityCode?.description || "Neodređena djelatnost",
       activityCode: companyRequest.activityCode?.code || "",
+      allActivities: allActivitiesText,
       capital: Number(companyRequest.capital || 0),
       currentDate: new Date().toLocaleDateString("sr-RS"),
       founders: companyRequest.founders.map((founder) => ({

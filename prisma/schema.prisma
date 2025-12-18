@@ -48,16 +48,18 @@ model CompanyRequest {
 }
 
 model Founder {
-  id               Int            @id @default(autoincrement())
+  id               Int              @id @default(autoincrement())
   companyRequestId Int
   name             String
-  idDocumentType   IdDocumentType @default(ID_CARD)
+  isResident       Boolean          @default(true)
+  jmbg             String?
+  idDocumentType   IdDocumentType   @default(ID_CARD)
   idNumber         String
-  issuedBy         String         @default("")
-  birthPlace       String         @default("")
+  issuedBy         String           @default("")
+  birthPlace       String           @default("")
   address          String
-  sharePercentage  Decimal        @db.Decimal(5, 2)
-  companyRequest   CompanyRequest @relation(fields: [companyRequestId], references: [id])
+  sharePercentage  Decimal          @db.Decimal(5, 2)
+  companyRequest   CompanyRequest   @relation(fields: [companyRequestId], references: [id])
 
   @@index([companyRequestId], map: "founders_companyRequestId_fkey")
   @@map("founders")

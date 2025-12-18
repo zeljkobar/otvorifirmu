@@ -1,247 +1,355 @@
-<div style="font-family: 'Times New Roman', serif; line-height: 1.6; padding: 40px;">
-
 {{#if isPreview}}
-  <div class="preview-notice" style="background: #fff3cd; padding: 15px; margin: 20px 0; border-radius: 5px; border: 2px solid #ffc107;">
-    ⚠️ <strong>PREVIEW VERZIJA</strong> - Ovo je skraćena verzija dokumenta. Za potpunu verziju izvršite plaćanje.
-  </div>
-{{/if}}
-
-<p style="text-align: left; margin-bottom: 10px;">Na osnovu člana 271 zakona o privrednim društvima (Sl. List RCG 065/20)</p>
-
-<p style="margin-bottom: 10px;">
-{{#each founders}}
-<strong>{{name}}</strong>{{#unless @last}}, {{/unless}}
-{{/each}}
-iz {{address}}, JMBG: {{founders.0.idNumber}} osnivač DOO "{{companyName}}", {{address}} dana {{currentDate}} donijeo/la je
-</p>
-
-<h1 style="text-align: center; margin: 30px 0;">STATUT</h1>
-<h2 style="text-align: center; margin: 20px 0;">D.O.O. "{{companyName}}"</h2>
-
-<h3 style="margin-top: 30px;">OSNOVNE ODREDBE</h3>
-
-<p><strong>1.</strong> Ovim Statutom se uređuju pitanja od značaja za organizovanje i rad Društva u skladu sa odredbama Zakona o privrednim društvima.</p>
-
-<h3 style="margin-top: 25px;">FIRMA I SJEDIŠTE</h3>
-
-<p><strong>2.</strong> Firma Društva je: "<strong>{{companyName}}</strong>" Društvo sa ograničenom odgovornošću.<br />
-Skraćena firma Društva je: "<strong>{{companyName}}</strong>" doo</p>
-
-<p><strong>3.</strong> Sjedište DRUŠTVA je u {{address}}<br />
-Adresa za prijem službene pošte je {{address}}, a adresa za prijem elektronske pošte je {{email}}<br />
-Kontakt telefon je {{phone}}</p>
-
-<p><strong>4.</strong> Osnivač Društva je:
-{{#if isPreview}}
-<span style="filter: blur(4px); background: rgba(0,0,0,0.05); padding: 2px 8px;">[PODACI OSNIVAČA - DOSTUPNO NAKON PLAĆANJA]</span>
-{{else}}
-{{#each founders}}
-<strong>{{name}}</strong>, rođen/a {{birthPlace}}, Crna Gora, dokument broj {{idNumber}}, izdat {{issuedBy}}, sa boravištem u {{address}}{{#unless @last}}; {{/unless}}
-{{/each}}
-{{/if}}
-</p>
-
-{{#unless isPreview}}
-
-<p><strong>5.</strong> U svom poslovanju Društvo upotrebljava pečat i štambilj koji sadrže naziv i sjedište Društva.<br />
-Oblik, veličinu i način upotrebe pečata i štambilja propisuje izvršni direktor Društva.</p>
-
-<p><strong>6.</strong> Odnosi u Društvu koji nijesu regulisani aktom o osnivanju i ovim Statutom urediće se drugim opštim aktima Društva (Pravilnicima, poslovnicima i dr.) i posebnim odlukama osnivača.</p>
-
-<h3 style="margin-top: 25px;">DJELATNOST</h3>
-
-<p><strong>7.</strong> Djelatnost Društva je:</p>
-{{#if isPreview}}
-<p style="margin-left: 20px; filter: blur(4px); background: rgba(0,0,0,0.05); padding: 10px;">[KOMPLETAN SPISAK DJELATNOSTI - DOSTUPAN NAKON PLAĆANJA]</p>
-{{else}}
-<p style="margin-left: 20px; white-space: pre-wrap;">{{activity}}</p>
-{{/if}}
-
-<p><strong>8.</strong> Društvo može vršiti promjenu djelatnosti.<br />
-Odluku o promjeni djelatnosti donosi osnivač društva u pismenoj formi.</p>
-
-<p><strong>10.</strong> Shodno osnivačkom ulogu osnivač je vlasnik društva i raspolaže sa udijelom u društvu:</p>
-{{#if isPreview}}
-<p style="margin-left: 20px; filter: blur(4px); background: rgba(0,0,0,0.05); padding: 10px;">[RASPODJELA UDIJELA - DOSTUPNO NAKON PLAĆANJA]</p>
-{{else}}
-<ul style="margin-left: 20px;">
-{{#each founders}}
-  <li>{{name}} - {{sharePercentage}}%</li>
-{{/each}}
-</ul>
-{{/if}}tyle="margin-left: 20px;">
-{{#each founders}}
-  <li>{{name}} - {{sharePercentage}}%</li>
-{{/each}}
-</ul>
-
-<p><strong>11.</strong> Ulog u Društvo mogu biti i nenovčana sredstva.<br />
-Procjena vrijednosti nenovčanog uloga vrši se u skladu sa čl.67 Zakona o privrednim društvima.</p>
-
-<h3 style="margin-top: 25px;">UTVRĐIVANJE DOBITI I NAČIN SNOŠENJA RIZIKA I POKRIĆE GUBITKA</h3>
-
-<p><strong>12.</strong> Društvo je dužno da organizuje vođenje knjigovodstva u skladu sa pozitivnim propisima, iz kojeg će se obezbijediti evidencija o rezultatima poslovanja društva.</p>
-
-<p><strong>13.</strong> Za ispravnost poslovnih knjiga i izvještaja o poslovanju odgovara izvršni direktor društva.</p>
-
-<p><strong>14.</strong> Odluku o raspodjeli dobiti, koja ostane nakon izmirenja poreza i doprinosa i drugih obaveza iz dobiti, te ostalih troškova poslovanja, donosi osnivač Društva.<br />
-Osnivač slobodno raspolaže dijelom dobiti koja mu pripada.</p>
-
-<p><strong>15.</strong> Eventualni gubitak u poslovanju Društva pokriva osnivač iz osnovnog kapitala.<br />
-Osnivač može uplatiti dopunska sredstva za pokriće gubitka. Pokriće gubitka vrši se u rokovima i u skladu sa zakonom.<br />
-Ukoliko za pokriće gubitka nema dovoljno osnivačkog kapitala, a osnivač ne izvrši dopunske uplate, pokreće se postupak za stečaj društva.<br />
-Postupak stečaja može pokrenuti osnivač i nadležni državni organ.</p>
-
-<h3 style="margin-top: 25px;">ORGANI DRUŠTVA</h3>
-
-<p><strong>16.</strong> Društvom upravlja osnivač.<br />
-Organ upravljanja u Društvu je izvršni direktor Društva.</p>
-
-<p><strong>17.</strong> Osnivač Društva odlučuje o:</p>
-<ul style="margin-left: 20px;">
-  <li>poslovnoj politici Društva</li>
-  <li>trajnoj poslovnoj saradnji i povezivanju sa drugim Društvima</li>
-  <li>donošenju investicionih odluka</li>
-  <li>osnivanju novih društava godišnjem obračunu i izvještajima o poslovanju Društva</li>
-  <li>raspodjeli dobiti i pokriću gubitka</li>
-  <li>povećavanju i smanjenju osnivačkog kapitala</li>
-  <li>dopunskim uplatama u Društvu</li>
-  <li>vraćanju naknadnih dopunskih uplata</li>
-  <li>diobi udjela</li>
-  <li>ostvarivanju zahtijeva Društva prema izvršnom direktoru Društva u vezi sa naknadom štete nastale osnivanjem Društva ili vođenje poslova</li>
-  <li>zastupanje Društva u sudskim i drugim postupcima protiv direktora Društva</li>
-  <li>statusnim promjenama, promjeni oblika i prestanku Društva</li>
-  <li>odobrava izbor lica sa posebnim ovlašćenjima i odgovornostima u Društvu (menadžeri)</li>
-  <li>donosi i mijenja i druga opšta akta u društvu</li>
-</ul>
-
-<p><strong>18.</strong> Izvršni direktor Društva:</p>
-<ul style="margin-left: 20px;">
-  <li>organizuje i rukovodi procesom rada i tekućim poslovima društva</li>
-  <li>predlaže koncepciju poslovne politike Društva i operativne poslove i programe rada Društva</li>
-  <li>odlučuje o radnim odnosima u Društvu (izuzev radnog odnosa osnivača Društva i lica sa posebnim ovlašćenjima i odgovornostima)</li>
-<p><strong>19.</strong> Za izvršnog direktora Društva imenovan je 
-{{#if isPreview}}
-<span style="filter: blur(4px); background: rgba(0,0,0,0.05); padding: 2px 8px;">[IME DIREKTORA - DOSTUPNO NAKON PLAĆANJA]</span>
-{{else}}
-<strong>{{founders.0.name}}</strong>, JMBG: {{founders.0.idNumber}}
-{{/if}}
-</p>
-  <li>vrši i druge poslove po ovlašćenjima osnivača Društva</li>
-</ul>
-
-<p><strong>19.</strong> Za izvršnog direktora Društva imenovan je <strong>{{founders.0.name}}</strong>, JMBG: {{founders.0.idNumber}}</p>
-
-<p><strong>20.</strong> Mandat izvršnog direktora Društva traje 4 godine, sa mogućnošću ponovnog imenovanja.</p>
-
-<p><strong>21.</strong> Za svoj rad izvršni direktor je odgovoran osnivaču Društva.<br />
-Izvršni direktor može biti smijenjen i prije isteka mandata. Odluku o smijeni donosi osnivač Društva.</p>
-
-<h3 style="margin-top: 25px;">ZASTUPANJE DRUŠTVA</h3>
-
-<p><strong>22.</strong> Društvo zastupa izvršni direktor društva, bez ograničenja.<br />
-Osnivač društva može ovlastiti i druga lica da zastupaju Društvo uz određivanje granice ovlašćenja zastupnika.</p>
-
-<h3 style="margin-top: 25px;">REZERVE</h3>
-
-<p><strong>23.</strong> Iz ostvarene dobiti Društvo izdvaja dio sredstava u rezervni fond, u skladu sa propisima o finansijskom poslovanju.</p>
-
-<h3 style="margin-top: 25px;">NAČIN PROMJENE OBLIKA DRUŠTVA</h3>
-
-<p><strong>24.</strong> Osnivač donosi odluku o promjeni oblika organizovanja društva.<br />
-Odluku donosi u pismenoj formi i prijavljuje Centralnom registru u Podgorici.</p>
-
-<h3 style="margin-top: 25px;">PRESTANAK DRUŠTVA</h3>
-
-<p><strong>25.</strong> Društvo prestaje na osnovu odluke osnivača Društva i u drugim slučajevima predviđenim Zakonom.</p>
-
-<h3 style="margin-top: 25px;">ČLANSTVO U DRUŠTVU</h3>
-
-<p><strong>26.</strong> O pristupanju novih članova Društvu odlučuje osnivač Društva.<br />
-Za osnivače i članove koji naknadno stupe u Društvo ulog ne može biti manji od 1 EUR.<br />
-O visini uloga iz prethodnog stava odluku donosi osnivač.<br />
-O pristupanju osnivača ili lica Društva sačinjava se ugovor u pismenoj formi kojim se utvrđuju novi odnosi u društvu.<br />
-Ugovor se prijavljuje Centralnom registru u Podgorici.</p>
-
-<h3 style="margin-top: 25px;">PRENOS UDIJELA</h3>
-
-<p><strong>27.</strong> Udio se može slobodno prenositi između članova društva ili trećim licima, u skladu sa odredbama zakona.</p>
-
-<p><strong>28.</strong> Prenos u izvršnom postupku izvršiće se u skladu sa pravilima izvršnog postupka i zakona.</p>
-
-<p><strong>29.</strong> Smrću ili prestankom člana društva udio se prenosi na nasljednika ili pravnog sljedbenika.<br />
-Nasljednik ili pravni sljedbenik, sticanjem udijela postaje član Društva, sa svim pravima, obavezama i odgovornostima u skladu sa odredbama Akta o osnivanju, Statuta i Zakona.</p>
-
-<h3 style="margin-top: 25px;">RJEŠAVANJE SPOROVA U DRUŠTVU</h3>
-
-<p><strong>30.</strong> Izvršni direktor Društva i lica sa posebnim ovlašćenjima i odgovornostima solidarno odgovaraju za štetu koju svojim odlukama nanesu Društvu, ukoliko su te odluke grubom nepažnjom ili namjerom da se šteta prouzrokuje.<br />
-Osnivač Društva može pokrenuti postupak pred sudom protiv organa poslovanja koji su donijeli odluku kojom se nanosi šteta Društvu na način utvrđen prethodnim stavom.</p>
-
-<p><strong>31.</strong> Pravo na podnošenje tužbe zastarijeva u roku od 90 dana od dana saznanja za odluku, a najdocnije u roku od 3 godine od dana donošenja odluke.</p>
-
-<h3 style="margin-top: 25px;">ADMINISTRATIVNE I PRAVNE OBAVEZE</h3>
-
-<p><strong>32.</strong> Društvo donosi opšta akta kojima se uređuju odnosi u Društvu.<br />
-Opšta akta Društva moraju biti usklađena sa aktom o osnivanju, Statutom Društva i pozitivnim zakonskim propisima.</p>
-
-<p><strong>33.</strong> Normativna akta Društva donosi osnivač.</p>
-
-<h3 style="margin-top: 25px;">ZASNIVANJE RADNOG ODNOSA</h3>
-
-<p><strong>34.</strong> Zasnivanje radnog odnosa radnika u Društvu vrši se u skladu sa odredbama Zakona o radu, Opšteg kolektivnog ugovora i drugih pozitivnih propisa.</p>
-
-<h3 style="margin-top: 25px;">KONTROLA AKTIVNOSTI DRUŠTVA</h3>
-
-<p><strong>35.</strong> Osnivač vrši kontrolu aktivnosti Društva, neposredno ili preko angažovanih stručnih ovlašćenih lica.<br />
-Reviziju poslovanja Društva, osnivač je dužan u skladu sa pozitivnim zakonskim propisima.<br />
-Izvršni direktor obezbeđuje mogućnost kontrole Društva koju vrše državni i drugi ovlašćeni organi.<br />
-Osnivač ima pravo da od državnih organa zatraži kontrolu poslovanja Društva.<br />
-Troškove revizije snosi Društvo na teret redovnih troškova poslovanja.</p>
-
-<h3 style="margin-top: 25px;">OBAVJEŠTAVANJE I POSLOVNA TAJNA</h3>
-
-<p><strong>36.</strong> Izvršni direktor je dužan da o poslovima iz svoje nadležnosti pravovremeno obavijesti osnivača Društva.</p>
-
-<p><strong>37.</strong> Pod poslovnom tajnom se podrazumijevaju:</p>
-<ul style="margin-left: 20px;">
-  <li>ukupan prihod, vrsta i visina troškova</li>
-  <li>vrijednost imovine</li>
-  <li>visina dobiti ili gubitka</li>
-  <li>visina zarada radnika</li>
-  <li>drugi podaci za koje odluku donese osnivač</li>
-</ul>
-<p>Odlukom o poslovnoj tajni posebno će se urediti način čuvanja poslovne tajne i odgovornost svih lica koja su u posjed poslovne tajne u slučaju njenog objelodanjivanja.</p>
-
-<h3 style="margin-top: 25px;">ZAŠTITA ŽIVOTNE SREDINE</h3>
-
-<p><strong>38.</strong> Društvo je dužno da svim zaposlenim obezbijedi primjenu standarda iz oblasti zaštite životne sredine, u skladu sa pozitivnim propisima.<br />
-Društvo je dužno da svoj ukupno poslovanje uskladi sa normama kojima se štiti životna sredina.</p>
-
-<h3 style="margin-top: 25px;">IZMJENE STATUTA</h3>
-
-<p><strong>39.</strong> Izmjenama Statuta odlučuje osnivač Društva.</p>
-
-<h3 style="margin-top: 25px;">ZAVRŠNE ODREDBE</h3>
-
-<p><strong>40.</strong> Ovaj Statut stupa na snagu danom upisa u CRPS.</p>
-
-<div style="margin-top: 60px; page-break-inside: avoid;">
-  <p style="text-align: right; margin-bottom: 40px;">OSNIVAČ,</p>
-  {{#each founders}}
-  <div style="text-align: right; margin-bottom: 30px;">
-    <p style="margin-bottom: 40px;">_____________________</p>
-    <p><strong>{{name}}</strong></p>
-  </div>
-  {{/each}}
+<div class="preview-notice" style="background: #fff3cd; padding: 10px; margin: 10px 0; border-radius: 5px; border: 2px solid #ffc107;">
+⚠️ <strong>PREVIEW VERZIJA</strong> - Ovo je skraćena verzija dokumenta. Za potpunu verziju izvršite plaćanje.
 </div>
+{{/if}}
 
-{{else}}
-  <div class="sensitive" style="filter: blur(3px); background: rgba(0,0,0,0.05); padding: 20px; margin: 20px 0;">
-    <p><strong>4.</strong> Osnivač Društva je: [SADRŽAJ DOSTUPAN NAKON PLAĆANJA]</p>
-    <p><strong>7.</strong> Djelatnost Društva je: [SADRŽAJ DOSTUPAN NAKON PLAĆANJA]</p>
-    <p><strong>9-40.</strong> [KOMPLETNA VERZIJA STATUTA DOSTUPNA NAKON PLAĆANJA]</p>
-    <p style="text-align: center; margin-top: 30px;"><em>Potpun sadržaj statuta (40 članova) dostupan nakon plaćanja</em></p>
-  </div>
-{{/unless}}
+<p style="margin-bottom: 5px;">Na osnovu člana 271 zakona o privrednim društvima (Sl. List RCG 065/20)</p>
+
+<p style="margin-bottom: 8px;">
+{{#each founders}}<strong>{{name}}</strong>{{#unless @last}}, {{/unless}}{{/each}} iz {{address}}, {{#if founders.0.isResident}}JMBG: {{founders.0.jmbg}}{{else}}pasoš broj {{founders.0.idNumber}}{{/if}} osnivač DOO "{{companyName}}", {{address}} dana {{currentDate}} donijeo/la je
+</p>
+
+<h1 style="text-align: center; margin: 12px 0;">STATUT</h1>
+<h2 style="text-align: center; margin: 10px 0;">D.O.O. "{{companyName}}"</h2>
+
+<h3 style="margin-top: 15px; margin-bottom: 8px;">OSNOVNE ODREDBE</h3>
+
+  <p><strong>1.</strong>
+    Ovim Statutom se uređuju pitanja od značaja za organizovanje i rad Društva u
+    skladu sa odredbama Zakona o privrednim društvima.</p>
+
+  <h3 style="margin-top: 12px; margin-bottom: 6px;">FIRMA I SJEDIŠTE</h3>
+
+  <p><strong>2.</strong>
+    Firma Društva je: "<strong>{{companyName}}</strong>" Društvo sa ograničenom
+    odgovornošću.<br />
+    Skraćena firma Društva je: "<strong>{{companyName}}</strong>" doo</p>
+
+  <p><strong>3.</strong>
+    Sjedište DRUŠTVA je u
+    {{address}}<br />
+    Adresa za prijem službene pošte je
+    {{address}}, a adresa za prijem elektronske pošte je
+    {{email}}<br />
+    Kontakt telefon je
+    {{phone}}</p>
+
+  <p><strong>4.</strong>
+    Osnivač Društva je:
+    {{#if isPreview}}
+      <span
+        style="filter: blur(4px); background: rgba(0,0,0,0.05); padding: 2px 8px;"
+      >[PODACI OSNIVAČA - DOSTUPNO NAKON PLAĆANJA]</span>
+    {{else}}
+      {{#each founders}}
+        <strong>{{name}}</strong>, rođen/a
+        {{birthPlace}}, Crna Gora, {{#if isResident}}JMBG: {{jmbg}}, dokument broj
+        {{idNumber}}, izdat
+        {{issuedBy}}{{else}}pasoš broj {{idNumber}}, izdat
+        {{issuedBy}}{{/if}}, sa boravištem u
+        {{address}}{{#unless @last}}; {{/unless}}
+      {{/each}}
+    {{/if}}
+  </p>
+
+  {{#unless isPreview}}
+
+    <p><strong>5.</strong>
+      U svom poslovanju Društvo upotrebljava pečat i štambilj koji sadrže naziv
+      i sjedište Društva.<br />
+      Oblik, veličinu i način upotrebe pečata i štambilja propisuje izvršni
+      direktor Društva.</p>
+
+    <p><strong>6.</strong>
+      Odnosi u Društvu koji nijesu regulisani aktom o osnivanju i ovim Statutom
+      urediće se drugim opštim aktima Društva (Pravilnicima, poslovnicima i dr.)
+      i posebnim odlukama osnivača.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">DJELATNOST</h3>
+
+    <p><strong>7.</strong> Djelatnost Društva je:</p>
+    {{#if isPreview}}
+      <p style="margin-left: 20px; filter: blur(4px); background: rgba(0,0,0,0.05); padding: 10px;">[KOMPLETAN SPISAK DJELATNOSTI - DOSTUPAN NAKON PLAĆANJA]</p>
+    {{else}}
+      <p style="margin-left: 20px; white-space: pre-wrap;">{{{allActivities}}}</p>
+      
+      <p style="margin-top: 10px;"><strong>PRETEŽNA DJELATNOST {{activityCode}}</strong></p>
+    {{/if}}
+
+    <p><strong>8.</strong>
+      Društvo može vršiti promjenu djelatnosti.<br />
+      Odluku o promjeni djelatnosti donosi osnivač društva u pismenoj formi.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">OSNOVNI KAPITAL, VRSTA I VISINA ULOGA, NAČIN
+      UPISA I UPLATE ULOGA I VELIČINA UDIJELA</h3>
+
+    <p><strong>9.</strong>
+      Osnovni kapital Društva čini ulog njegovog osnivača u novcu koji iznosi
+      {{capital}}
+      €.</p>
+
+    <p><strong>10.</strong>
+      Shodno osnivačkom ulogu osnivač je vlasnik društva i raspolaže sa udijelom
+      u društvu:</p>
+    {{#if isPreview}}
+      <p
+        style="margin-left: 20px; filter: blur(4px); background: rgba(0,0,0,0.05); padding: 10px;"
+      >[RASPODJELA UDIJELA - DOSTUPNO NAKON PLAĆANJA]</p>
+    {{else}}
+      <ul style="margin-left: 20px;">
+        {{#each founders}}
+          <li>{{name}} - {{sharePercentage}}%</li>
+        {{/each}}
+      </ul>
+    {{/if}}
+
+    <p><strong>11.</strong>
+      Ulog u Društvo mogu biti i nenovčana sredstva.<br />
+      Procjena vrijednosti nenovčanog uloga vrši se u skladu sa čl.67 Zakona o
+      privrednim društvima.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">UTVRĐIVANJE DOBITI I NAČIN SNOŠENJA RIZIKA I
+      POKRIĆE GUBITKA</h3>
+
+    <p><strong>12.</strong>
+      Društvo je dužno da organizuje vođenje knjigovodstva u skladu sa
+      pozitivnim propisima, iz kojeg će se obezbijediti evidencija o rezultatima
+      poslovanja društva.</p>
+
+    <p><strong>13.</strong>
+      Za ispravnost poslovnih knjiga i izvještaja o poslovanju odgovara izvršni
+      direktor društva.</p>
+
+    <p><strong>14.</strong>
+      Odluku o raspodjeli dobiti, koja ostane nakon izmirenja poreza i doprinosa
+      i drugih obaveza iz dobiti, te ostalih troškova poslovanja, donosi osnivač
+      Društva.<br />
+      Osnivač slobodno raspolaže dijelom dobiti koja mu pripada.</p>
+
+    <p><strong>15.</strong>
+      Eventualni gubitak u poslovanju Društva pokriva osnivač iz osnovnog
+      kapitala.<br />
+      Osnivač može uplatiti dopunska sredstva za pokriće gubitka. Pokriće
+      gubitka vrši se u rokovima i u skladu sa zakonom.<br />
+      Ukoliko za pokriće gubitka nema dovoljno osnivačkog kapitala, a osnivač ne
+      izvrši dopunske uplate, pokreće se postupak za stečaj društva.<br />
+      Postupak stečaja može pokrenuti osnivač i nadležni državni organ.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">ORGANI DRUŠTVA</h3>
+
+    <p><strong>16.</strong>
+      Društvom upravlja osnivač.<br />
+      Organ upravljanja u Društvu je izvršni direktor Društva.</p>
+
+    <p><strong>17.</strong> Osnivač Društva odlučuje o:</p>
+    <ul style="margin-left: 20px;">
+      <li>poslovnoj politici Društva</li>
+      <li>trajnoj poslovnoj saradnji i povezivanju sa drugim Društvima</li>
+      <li>donošenju investicionih odluka</li>
+      <li>osnivanju novih društava godišnjem obračunu i izvještajima o
+        poslovanju Društva</li>
+      <li>raspodjeli dobiti i pokriću gubitka</li>
+      <li>povećavanju i smanjenju osnivačkog kapitala</li>
+      <li>dopunskim uplatama u Društvu</li>
+      <li>vraćanju naknadnih dopunskih uplata</li>
+      <li>diobi udjela</li>
+      <li>ostvarivanju zahtijeva Društva prema izvršnom direktoru Društva u vezi
+        sa naknadom štete nastale osnivanjem Društva ili vođenje poslova</li>
+      <li>zastupanje Društva u sudskim i drugim postupcima protiv direktora
+        Društva</li>
+      <li>statusnim promjenama, promjeni oblika i prestanku Društva</li>
+      <li>odobrava izbor lica sa posebnim ovlašćenjima i odgovornostima u
+        Društvu (menadžeri)</li>
+      <li>donosi i mijenja i druga opšta akta u društvu</li>
+    </ul>
+
+    <p><strong>18.</strong> Izvršni direktor Društva:</p>
+    <ul style="margin-left: 20px;">
+      <li>organizuje i rukovodi procesom rada i tekućim poslovima društva</li>
+      <li>predlaže koncepciju poslovne politike Društva i operativne poslove i
+        programe rada Društva</li>
+      <li>odlučuje o radnim odnosima u Društvu (izuzev radnog odnosa osnivača
+        Društva i lica sa posebnim ovlašćenjima i odgovornostima)</li>
+      <li>odgovoran je za zakonitost rada Društva</li>
+      <li>vrši i druge poslove po ovlašćenjima osnivača Društva</li>
+    </ul>
+
+    <p><strong>19.</strong>
+      Za izvršnog direktora Društva imenovan je
+      {{#if isPreview}}
+        <span
+          style="filter: blur(4px); background: rgba(0,0,0,0.05); padding: 2px 8px;"
+        >[IME DIREKTORA - DOSTUPNO NAKON PLAĆANJA]</span>
+      {{else}}
+        <strong>{{founders.0.name}}</strong>, {{#if founders.0.isResident}}JMBG:
+        {{founders.0.jmbg}}{{else}}pasoš broj {{founders.0.idNumber}}{{/if}}
+      {{/if}}
+    </p>
+
+    <p><strong>20.</strong>
+      Mandat izvršnog direktora Društva traje 4 godine, sa mogućnošću ponovnog
+      imenovanja.</p>
+
+    <p><strong>21.</strong>
+      Za svoj rad izvršni direktor je odgovoran osnivaču Društva.<br />
+      Izvršni direktor može biti smijenjen i prije isteka mandata. Odluku o
+      smijeni donosi osnivač Društva.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">ZASTUPANJE DRUŠTVA</h3>
+
+    <p><strong>22.</strong>
+      Društvo zastupa izvršni direktor društva, bez ograničenja.<br />
+      Osnivač društva može ovlastiti i druga lica da zastupaju Društvo uz
+      određivanje granice ovlašćenja zastupnika.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">REZERVE</h3>
+
+    <p><strong>23.</strong>
+      Iz ostvarene dobiti Društvo izdvaja dio sredstava u rezervni fond, u
+      skladu sa propisima o finansijskom poslovanju.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">NAČIN PROMJENE OBLIKA DRUŠTVA</h3>
+
+    <p><strong>24.</strong>
+      Osnivač donosi odluku o promjeni oblika organizovanja društva.<br />
+      Odluku donosi u pismenoj formi i prijavljuje Centralnom registru u
+      Podgorici.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">PRESTANAK DRUŠTVA</h3>
+
+    <p><strong>25.</strong>
+      Društvo prestaje na osnovu odluke osnivača Društva i u drugim slučajevima
+      predviđenim Zakonom.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">ČLANSTVO U DRUŠTVU</h3>
+
+    <p><strong>26.</strong>
+      O pristupanju novih članova Društvu odlučuje osnivač Društva.<br />
+      Za osnivače i članove koji naknadno stupe u Društvo ulog ne može biti
+      manji od 1 EUR.<br />
+      O visini uloga iz prethodnog stava odluku donosi osnivač.<br />
+      O pristupanju osnivača ili lica Društva sačinjava se ugovor u pismenoj
+      formi kojim se utvrđuju novi odnosi u društvu.<br />
+      Ugovor se prijavljuje Centralnom registru u Podgorici.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">PRENOS UDIJELA</h3>
+
+    <p><strong>27.</strong>
+      Udio se može slobodno prenositi između članova društva ili trećim licima,
+      u skladu sa odredbama zakona.</p>
+
+    <p><strong>28.</strong>
+      Prenos u izvršnom postupku izvršiće se u skladu sa pravilima izvršnog
+      postupka i zakona.</p>
+
+    <p><strong>29.</strong>
+      Smrću ili prestankom člana društva udio se prenosi na nasljednika ili
+      pravnog sljedbenika.<br />
+      Nasljednik ili pravni sljedbenik, sticanjem udijela postaje član Društva,
+      sa svim pravima, obavezama i odgovornostima u skladu sa odredbama Akta o
+      osnivanju, Statuta i Zakona.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">RJEŠAVANJE SPOROVA U DRUŠTVU</h3>
+
+    <p><strong>30.</strong>
+      Izvršni direktor Društva i lica sa posebnim ovlašćenjima i odgovornostima
+      solidarno odgovaraju za štetu koju svojim odlukama nanesu Društvu, ukoliko
+      su te odluke grubom nepažnjom ili namjerom da se šteta prouzrokuje.<br />
+      Osnivač Društva može pokrenuti postupak pred sudom protiv organa
+      poslovanja koji su donijeli odluku kojom se nanosi šteta Društvu na način
+      utvrđen prethodnim stavom.</p>
+
+    <p><strong>31.</strong>
+      Pravo na podnošenje tužbe zastarijeva u roku od 90 dana od dana saznanja
+      za odluku, a najdocnije u roku od 3 godine od dana donošenja odluke.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">ADMINISTRATIVNE I PRAVNE OBAVEZE</h3>
+
+    <p><strong>32.</strong>
+      Društvo donosi opšta akta kojima se uređuju odnosi u Društvu.<br />
+      Opšta akta Društva moraju biti usklađena sa aktom o osnivanju, Statutom
+      Društva i pozitivnim zakonskim propisima.</p>
+
+    <p><strong>33.</strong> Normativna akta Društva donosi osnivač.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">ZASNIVANJE RADNOG ODNOSA</h3>
+
+    <p><strong>34.</strong>
+      Zasnivanje radnog odnosa radnika u Društvu vrši se u skladu sa odredbama
+      Zakona o radu, Opšteg kolektivnog ugovora i drugih pozitivnih propisa.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">KONTROLA AKTIVNOSTI DRUŠTVA</h3>
+
+    <p><strong>35.</strong>
+      Osnivač vrši kontrolu aktivnosti Društva, neposredno ili preko angažovanih
+      stručnih ovlašćenih lica.<br />
+      Reviziju poslovanja Društva, osnivač je dužan u skladu sa pozitivnim
+      zakonskim propisima.<br />
+      Izvršni direktor obezbeđuje mogućnost kontrole Društva koju vrše državni i
+      drugi ovlašćeni organi.<br />
+      Osnivač ima pravo da od državnih organa zatraži kontrolu poslovanja
+      Društva.<br />
+      Troškove revizije snosi Društvo na teret redovnih troškova poslovanja.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">OBAVJEŠTAVANJE I POSLOVNA TAJNA</h3>
+
+    <p><strong>36.</strong>
+      Izvršni direktor je dužan da o poslovima iz svoje nadležnosti pravovremeno
+      obavijesti osnivača Društva.</p>
+
+    <p><strong>37.</strong> Pod poslovnom tajnom se podrazumijevaju:</p>
+    <ul style="margin-left: 20px;">
+      <li>ukupan prihod, vrsta i visina troškova</li>
+      <li>vrijednost imovine</li>
+      <li>visina dobiti ili gubitka</li>
+      <li>visina zarada radnika</li>
+      <li>drugi podaci za koje odluku donese osnivač</li>
+    </ul>
+    <p>Odlukom o poslovnoj tajni posebno će se urediti način čuvanja poslovne
+      tajne i odgovornost svih lica koja su u posjed poslovne tajne u slučaju
+      njenog objelodanjivanja.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">ZAŠTITA ŽIVOTNE SREDINE</h3>
+
+    <p><strong>38.</strong>
+      Društvo je dužno da svim zaposlenim obezbijedi primjenu standarda iz
+      oblasti zaštite životne sredine, u skladu sa pozitivnim propisima.<br />
+      Društvo je dužno da svoj ukupno poslovanje uskladi sa normama kojima se
+      štiti životna sredina.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">IZMJENE STATUTA</h3>
+
+    <p><strong>39.</strong> Izmjenama Statuta odlučuje osnivač Društva.</p>
+
+    <h3 style="margin-top: 12px; margin-bottom: 6px;">ZAVRŠNE ODREDBE</h3>
+
+    <p><strong>40.</strong> Ovaj Statut stupa na snagu danom upisa u CRPS.</p>
+
+    <div style="margin-top: 50px; page-break-inside: avoid;">
+      <p style="margin-bottom: 10px;">OSNIVAČ,</p>
+      {{#each founders}}
+        <div style="margin-top: 40px;">
+          <p style="border-bottom: 1px solid #000; width: 200px; margin-bottom: 5px;"></p>
+          <p><strong>{{name}}</strong></p>
+        </div>
+      {{/each}}
+    </div>
+
+  {{else}}
+    <div
+      class="sensitive"
+      style="filter: blur(3px); background: rgba(0,0,0,0.05); padding: 20px; margin: 20px 0;"
+    >
+      <p><strong>4.</strong>
+        Osnivač Društva je: [SADRŽAJ DOSTUPAN NAKON PLAĆANJA]</p>
+      <p><strong>7.</strong>
+        Djelatnost Društva je: [SADRŽAJ DOSTUPAN NAKON PLAĆANJA]</p>
+      <p><strong>9-40.</strong>
+        [KOMPLETNA VERZIJA STATUTA DOSTUPNA NAKON PLAĆANJA]</p>
+      <p style="text-align: center; margin-top: 30px;"><em>Potpun sadržaj
+          statuta (40 članova) dostupan nakon plaćanja</em></p>
+    </div>
+  {{/unless}}
 
 </div>

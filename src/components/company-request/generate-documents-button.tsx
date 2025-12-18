@@ -44,10 +44,6 @@ export function GenerateDocumentsButton({
     }
   };
 
-  if (hasDocuments) {
-    return null; // Dokumenti već postoje
-  }
-
   if (!canGenerate) {
     return (
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-800">
@@ -58,6 +54,12 @@ export function GenerateDocumentsButton({
 
   return (
     <div className="space-y-3">
+      {hasDocuments && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800 mb-3">
+          ℹ️ Dokumenti su već generisani. Možete ih regenerisati ako je potrebno.
+        </div>
+      )}
+      
       <button
         onClick={handleGenerate}
         disabled={isGenerating}
@@ -71,7 +73,7 @@ export function GenerateDocumentsButton({
         ) : (
           <>
             <FileText className="w-4 h-4 mr-2" />
-            Generiši statut i dokumenta
+            {hasDocuments ? "Regeneriši dokumente" : "Generiši statut i dokumenta"}
           </>
         )}
       </button>

@@ -34,6 +34,21 @@ async function getDashboardData(userId: number) {
   }
 }
 
+async function getAdminStats() {
+  try {
+    const pendingCount = await prisma.companyRequest.count({
+      where: {
+        OR: [{ status: "PAID" }, { status: "AWAITING_PAYMENT" }],
+      },
+    });
+
+    return { pendingCount };
+  } catch (error) {
+    console.error("Error fetching admin stats:", error);
+    return { pendingCount: 0 };
+  }
+}
+
 function getStatusInfo(status: string) {
   switch (status) {
     case "DRAFT":
@@ -100,6 +115,8 @@ export default async function Dashboard() {
   console.log("Parsed userId:", userId);
 
   const { companyRequests } = await getDashboardData(userId);
+  const adminStats =
+    session.user.role === "ADMIN" ? await getAdminStats() : null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -115,9 +132,14 @@ export default async function Dashboard() {
               {session.user.role === "ADMIN" && (
                 <Link
                   href="/admin"
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
+                  className="relative bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
                 >
                   <span>Admin Panel</span>
+                  {adminStats && adminStats.pendingCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
+                      {adminStats.pendingCount}
+                    </span>
+                  )}
                 </Link>
               )}
               <Link
@@ -135,6 +157,32 @@ export default async function Dashboard() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        {/* Admin Alert */}
+        {session.user.role === "ADMIN" &&
+          adminStats &&
+          adminStats.pendingCount > 0 && (
+            <div className="mb-6 bg-purple-50 border-l-4 border-purple-600 p-4 rounded-lg">
+              <div className="flex items-center">
+                <AlertCircle className="h-5 w-5 text-purple-600 mr-3" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-purple-900">
+                    Imaš {adminStats.pendingCount}{" "}
+                    {adminStats.pendingCount === 1 ? "zahtjev" : "zahtjeva"} na
+                    čekanju
+                  </p>
+                  <p className="text-sm text-purple-700 mt-1">
+                    Klikni na Admin Panel da ih pregledate i odobrite.
+                  </p>
+                </div>
+                <Link
+                  href="/admin"
+                  className="ml-4 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
+                >
+                  Pregledaj
+                </Link>
+              </div>
+            </div>
+          )}
         <div className="mb-8">
           <h2 className="text-lg font-medium text-gray-900 mb-4">
             Tvoji zahtevi
