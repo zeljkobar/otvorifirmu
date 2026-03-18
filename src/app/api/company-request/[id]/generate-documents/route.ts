@@ -1,36 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { pdfGenerator } from "@/lib/pdf-generator";
+import { docxGenerator } from "@/lib/docx-generator";
 import fs from "fs";
 import path from "path";
 
 // Helper funkcija za sklanjanje gradova u lokativ (7. padež)
 function getCityLocative(city: string): string {
   const cityMap: Record<string, string> = {
-    "Bar": "Baru",
-    "Podgorica": "Podgorici",
-    "Budva": "Budvi",
-    "Nikšić": "Nikšiću",
+    Bar: "Baru",
+    Podgorica: "Podgorici",
+    Budva: "Budvi",
+    Nikšić: "Nikšiću",
     "Herceg Novi": "Herceg Novom",
-    "Pljevlja": "Pljevljima",
+    Pljevlja: "Pljevljima",
     "Bijelo Polje": "Bijelom Polju",
-    "Cetinje": "Cetinju",
-    "Berane": "Beranama",
-    "Ulcinj": "Ulcinju",
-    "Tivat": "Tivtu",
-    "Rožaje": "Rožajama",
-    "Kotor": "Kotoru",
-    "Mojkovac": "Mojkovcu",
-    "Plav": "Plavu",
-    "Kolašin": "Kolašinu",
-    "Danilovgrad": "Danilovgradu",
-    "Žabljak": "Žabljaku",
-    "Andrijevica": "Andrijevici",
-    "Šavnik": "Šavniku",
-    "Plužine": "Plužinama",
-    "Petnjica": "Petnjici",
-    "Gusinje": "Gusinju",
+    Cetinje: "Cetinju",
+    Berane: "Beranama",
+    Ulcinj: "Ulcinju",
+    Tivat: "Tivtu",
+    Rožaje: "Rožajama",
+    Kotor: "Kotoru",
+    Mojkovac: "Mojkovcu",
+    Plav: "Plavu",
+    Kolašin: "Kolašinu",
+    Danilovgrad: "Danilovgradu",
+    Žabljak: "Žabljaku",
+    Andrijevica: "Andrijevici",
+    Šavnik: "Šavniku",
+    Plužine: "Plužinama",
+    Petnjica: "Petnjici",
+    Gusinje: "Gusinju",
   };
   return cityMap[city] || city + "u"; // fallback: dodaj "u" ako grad nije u mapi
 }
@@ -43,7 +43,7 @@ interface RouteParams {
 
 export async function POST(
   request: NextRequest,
-  { params }: RouteParams
+  { params }: RouteParams,
 ): Promise<NextResponse> {
   try {
     const session = await getAuthSession();
@@ -58,7 +58,7 @@ export async function POST(
     if (isNaN(requestId)) {
       return NextResponse.json(
         { error: "Invalid request ID" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -80,7 +80,7 @@ export async function POST(
     if (!companyRequest) {
       return NextResponse.json(
         { error: "Company request not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -92,7 +92,7 @@ export async function POST(
     ) {
       return NextResponse.json(
         { error: "Payment must be completed before generating documents" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -104,7 +104,7 @@ export async function POST(
     if (!template) {
       return NextResponse.json(
         { error: "Template not found. Please run: npx prisma db seed" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -150,12 +150,12 @@ export async function POST(
       })),
     };
 
-    // Generiši PDF
-    console.log("Generating PDF for company:", companyRequest.companyName);
-    const pdfBuffer = await pdfGenerator.generateFinal(
-      template.content,
-      templateData
+    // Generiši Word dokument
+    console.log(
+      "Generating Word document for company:",
+      companyRequest.companyName,
     );
+    const docxBuffer = await docxGenerator.generateStatut(templateData);
 
     // Kreiraj folder za dokumente ako ne postoji
     const docsDir = path.join(process.cwd(), "generated-docs");
@@ -170,12 +170,12 @@ export async function POST(
     });
     console.log("Found old documents:", oldDocuments.length);
 
-    // Obriši stare PDF fajlove sa diska
+    // Obriši stare fajlove sa diska
     for (const doc of oldDocuments) {
       const oldFilePath = path.join(docsDir, doc.fileName);
       if (fs.existsSync(oldFilePath)) {
         fs.unlinkSync(oldFilePath);
-        console.log("Deleted old PDF:", oldFilePath);
+        console.log("Deleted old file:", oldFilePath);
       }
     }
 
@@ -193,23 +193,25 @@ export async function POST(
       .replace(/\s+/g, "-")
       .toLowerCase();
     const timestamp = Date.now();
-    const fileName = `statut-${sanitizedName}-${timestamp}.pdf`;
-    const filePath = path.join(docsDir, fileName);
 
-    // Sačuvaj novi PDF na disk
-    console.log("Saving new PDF to:", filePath);
-    fs.writeFileSync(filePath, pdfBuffer);
-    console.log("PDF saved successfully!");
+    const docxFileName = `statut-${sanitizedName}-${timestamp}.docx`;
+    const docxFilePath = path.join(docsDir, docxFileName);
 
-    // Sačuvaj metadata u bazu
-    const generatedDocument = await prisma.generatedDocument.create({
+    // Sačuvaj Word dokument na disk
+    console.log("Saving Word document to:", docxFilePath);
+    fs.writeFileSync(docxFilePath, docxBuffer);
+    console.log("Word document saved successfully!");
+
+    // Sačuvaj metadata u bazu za Word dokument
+    const docxDocument = await prisma.generatedDocument.create({
       data: {
         companyRequestId: requestId,
         templateId: template.id,
-        fileName,
-        fileUrl: `/api/company-request/${requestId}/download/${fileName}`,
-        mimeType: "application/pdf",
-        fileSize: pdfBuffer.length,
+        fileName: docxFileName,
+        fileUrl: `/api/company-request/${requestId}/download/${docxFileName}`,
+        mimeType:
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        fileSize: docxBuffer.length,
         metadata: JSON.stringify({
           generatedAt: new Date().toISOString(),
           generatedBy: session.user.id,
@@ -228,7 +230,7 @@ export async function POST(
 
     return NextResponse.json({
       message: "Document generated successfully",
-      document: generatedDocument,
+      document: docxDocument,
     });
   } catch (error) {
     console.error("Error generating documents:", error);
@@ -237,7 +239,7 @@ export async function POST(
         error: "Failed to generate documents",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

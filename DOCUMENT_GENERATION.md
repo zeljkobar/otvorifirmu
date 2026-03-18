@@ -18,6 +18,13 @@
 - Download linkovi za svaki generisani dokument
 - Status indikatori i error handling
 
+### 4. **Statut template**
+
+- **Aktuelni template:** `doo-statut.hbs` - Statut jednočlanog D.O.O. društva
+- **Zakonska osnova:** Zakon o privrednim društvima br. 090/25 od 06.08.2025
+- **Struktura:** 14 članova (I-XIV) u skladu sa novim propisima
+- **Originalni dokument:** `Statut DOO jednočlano.docx` (referentna verzija)
+
 ---
 
 ## 🚀 Kako testirati
@@ -117,21 +124,17 @@ node scripts/test-document-generation.js [REQUEST_ID]
 ## 🎯 Flow rada sistema
 
 1. **Korisnik kreira zahtjev** (`/wizard`)
-
    - Popunjava podatke o firmi i osnivačima
    - Status: `DRAFT`
 
 2. **Korisnik potvrdi plaćanje** (`/payment/[id]`)
-
    - Status: `AWAITING_PAYMENT` → `PAYMENT_PENDING`
 
 3. **Admin odobri plaćanje** (`/admin`)
-
    - Status: `PAID`
    - **Automatski** se pokreće generisanje dokumenata
 
 4. **Sistem generiše PDF**
-
    - Učitava template iz baze
    - Popunjava podatke (Handlebars)
    - Puppeteer renderuje HTML → PDF

@@ -2,6 +2,68 @@ import { prisma } from "../src/lib/db";
 
 // Najčešće korišćene šifre delatnosti u Crnoj Gori
 const activityCodes = [
+  // Poljoprivreda i stočarstvo
+  {
+    code: "01.11",
+    description:
+      "Gajenje žitarica, osim pirinča, gajenje leguminoza i uljarica",
+  },
+  { code: "01.12", description: "Gajenje pirinča" },
+  {
+    code: "01.13",
+    description:
+      "Gajenje povrća, dinja i lubenica, korjenastih i krolastih biljaka",
+  },
+  { code: "01.14", description: "Gajenje šećerne trske" },
+  { code: "01.15", description: "Gajenje duvana" },
+  { code: "01.16", description: "Gajenje biljaka za proizvodnju vlakana" },
+  {
+    code: "01.19",
+    description: "Gajenje ostalih jednogodišnjih i dvogodišnjih biljaka",
+  },
+  { code: "01.21", description: "Gajenje grožđa" },
+  { code: "01.22", description: "Gajenje tropskog i suptropskog voća" },
+  { code: "01.23", description: "Gajenje agruma" },
+  { code: "01.24", description: "Gajenje jabučastog i koštičavog voća" },
+  {
+    code: "01.25",
+    description: "Gajenje ostalog drvenastog, žbunastog i jezgrastog voća",
+  },
+  { code: "01.26", description: "Gajenje uljnih plodova" },
+  { code: "01.27", description: "Gajenje biljaka za pripremanje napitaka" },
+  {
+    code: "01.28",
+    description: "Gajenje začinskog, aromatičnog i ljekovitog bilja",
+  },
+  { code: "01.29", description: "Gajenje ostalih višegodišnjih biljaka" },
+  { code: "01.30", description: "Gajenje sadnog materijala" },
+  { code: "01.41", description: "Uzgoj muznih krava" },
+  { code: "01.42", description: "Uzgoj drugih goveda i bivola" },
+  { code: "01.43", description: "Uzgoj konja i drugih kopitara" },
+  { code: "01.44", description: "Uzgoj kamila i lama" },
+  { code: "01.45", description: "Uzgoj ovaca i koza" },
+  { code: "01.46", description: "Uzgoj svinja" },
+  { code: "01.47", description: "Uzgoj živine" },
+  { code: "01.48", description: "Uzgoj ostalih životinja" },
+  { code: "01.50", description: "Mješovita poljoprivredna proizvodnja" },
+  {
+    code: "01.61",
+    description: "Pomoćne djelatnosti za gajenje usjeva i zasada",
+  },
+  { code: "01.62", description: "Pomoćne djelatnosti za uzgoj životinja" },
+  {
+    code: "01.63",
+    description:
+      "Djelatnosti poslije žetve i dorada sjemena za sjemenski materijal",
+  },
+  {
+    code: "01.70",
+    description: "Lov, traperstvo i odgovarajuće uslužne djelatnosti",
+  },
+  { code: "02.10", description: "Gajenje šuma i ostale šumarske djelatnosti" },
+  { code: "02.20", description: "Sječa drveća" },
+  { code: "02.30", description: "Sakupljanje šumskih plodova, osim drveta" },
+
   // Trgovina
   {
     code: "47.11",

@@ -23,7 +23,7 @@ interface DocumentData {
 export class PDFGenerator {
   async generatePreview(
     templateContent: string,
-    data: DocumentData
+    data: DocumentData,
   ): Promise<Buffer> {
     const template = Handlebars.compile(templateContent);
 
@@ -96,7 +96,7 @@ export class PDFGenerator {
 
   async generateFinal(
     templateContent: string,
-    data: DocumentData
+    data: DocumentData,
   ): Promise<Buffer> {
     const template = Handlebars.compile(templateContent);
     const html = template({ ...data, isPreview: false });
@@ -115,6 +115,16 @@ export class PDFGenerator {
           }
           .content {
             line-height: 1.4;
+          }
+          @media print {
+            div[style*="page-break-after: always"] {
+              page-break-after: always;
+              break-after: page;
+            }
+            div[style*="page-break-before: always"] {
+              page-break-before: always;
+              break-before: page;
+            }
           }
           h1 { 
             font-size: 16pt;
@@ -158,7 +168,7 @@ export class PDFGenerator {
 
   private async htmlToPDF(
     html: string,
-    options: { isPreview: boolean }
+    options: { isPreview: boolean },
   ): Promise<Buffer> {
     const browser = await puppeteer.launch({
       headless: true,
